@@ -1,0 +1,7 @@
+application:
+    build: container/application
+    working_dir: /usr/src/app
+    volumes:
+        - ./:/usr/src/app
+    ports:
+        - "8000:8000"

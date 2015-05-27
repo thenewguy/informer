@@ -1,0 +1,13 @@
+<p>
+    <span data-ng-if="informer.operational" style="color: green">
+        <strong>UP</strong>
+    </span>
+    <span data-ng-if="!informer.operational"  style="color: red">
+        <strong>DOWN</strong>
+    </span>
+    {{ informer.name | name }}
+</p>
+
+<p>{{ informer.message }}</p>
+
+<md-button class="md-primary" data-ng-href="#/informer/">back</md-button>
