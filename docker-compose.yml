@@ -1,5 +1,5 @@
 application:
-    build: container/application
+    build: container
     working_dir: /usr/src/app
     volumes:
         - ./:/usr/src/app
