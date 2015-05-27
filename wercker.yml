@@ -9,5 +9,9 @@ build:
         code: py.test
 
     - script:
-        name: pypi deploy
+        name: build
+        code: python setup.py sdist bdist_whell
+
+    - script:
+        name: deploy
         code: twine upload -u $PYPI_USER -p $PYPI_PASSWORD dist/*
