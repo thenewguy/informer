@@ -1,6 +1,8 @@
 =====
-Django Informer |ImageLink|_
+Django Informer
 =====
+
+|ImageLink|_
 
 A pluggable app to monitoring your own infrastructure and third party services.
 
