@@ -9,6 +9,10 @@ build:
             code: py.test
 
         - script:
+            name: run code coverage
+            code: py.test --cov informer
+
+        - script:
             name: build
             code: python setup.py sdist bdist_wheel
 
