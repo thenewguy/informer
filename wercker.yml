@@ -1,1 +1,9 @@
 box: wercker/python
+build:
+  steps:
+    - pip-install
+
+    - script:
+        name: run unit tests
+        code: |
+          py.test
