@@ -2,7 +2,7 @@
 django-informer
 =====
 
-[![wercker status](https://app.wercker.com/status/0d5743ef22b8fe14d2929ec4d987ef0d/s/master "wercker status")](https://app.wercker.com/project/bykey/0d5743ef22b8fe14d2929ec4d987ef0d)
+<a href="https://app.wercker.com/project/bykey/0d5743ef22b8fe14d2929ec4d987ef0d"><img alt="Wercker status" src="https://app.wercker.com/status/0d5743ef22b8fe14d2929ec4d987ef0d/s"></a>
 
 A pluggable app to monitoring your own infrastructure and third party services.
 
