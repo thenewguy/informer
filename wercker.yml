@@ -10,7 +10,7 @@ build:
 
     - script:
         name: build
-        code: python setup.py sdist bdist_whell
+        code: python setup.py sdist bdist_wheel
 
     - script:
         name: deploy
