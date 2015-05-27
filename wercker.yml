@@ -2,7 +2,7 @@ box: wercker/python
 build:
   steps:
     - pip-install:
-        requirements_file: "conteiner/requirements.txt"
+        requirements_file: "container/requirements.txt"
 
     - script:
         name: run unit tests
