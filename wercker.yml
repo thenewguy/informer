@@ -14,6 +14,8 @@ build:
 
 deploy:
     steps:
+        - pip-install:
+            requirements_file: "container/requirements.txt"
         - script:
             name: deploy
             code: twine upload -u $PYPI_USER -p $PYPI_PASSWORD dist/*
