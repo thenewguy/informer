@@ -10,4 +10,4 @@ build:
 
     - script:
         name: pypi deploy
-        code: ./deploy.sh
+        code: twine upload -u $PYPI_USER -p $PYPI_PASSWORD dist/*
