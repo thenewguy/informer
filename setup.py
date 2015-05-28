@@ -23,13 +23,13 @@ chdir(path.normpath(path.join(path.abspath(__file__), pardir)))
 setup(
     name='django_informer',
 
-    version='0.1.0',
+    version='0.1.1',
 
     description='a pluggable app to monitoring your own infrastructure and '
         'third party services.',
     long_description=long_description,
 
-    url='https://github.com/rodrigobraga/django-informer',
+    url='https://github.com/rodrigobraga/informer',
 
     author='Rodrigo Braga',
     author_email='rodrigobraga@msn.com',
