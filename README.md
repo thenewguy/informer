@@ -17,7 +17,7 @@ Detailed documentation is in the "docs" directory.
     )
 ```
 
-2.Include a list from informers on settings
+2.And a list from informers on settings
 
 ```
 DJANGO_INFORMERS = (
