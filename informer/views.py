@@ -40,9 +40,11 @@ class InformerDiscoverView(View):
         GET /informer/discover/
         """
 
+        DJANGO_INFORMERS = getattr(settings, 'DJANGO_INFORMERS', ())
+
         informers = []
 
-        for namespace, classname in settings.DJANGO_INFORMERS:
+        for namespace, classname in DJANGO_INFORMERS:
             name = classname.replace('Informer', '').lower()
             urlname = 'informer-%s' % name
 
