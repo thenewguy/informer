@@ -2,6 +2,8 @@
 
 [![wercker status](https://app.wercker.com/status/0d5743ef22b8fe14d2929ec4d987ef0d/s "wercker status")](https://app.wercker.com/project/bykey/0d5743ef22b8fe14d2929ec4d987ef0d)
 
+[![PyPI](https://img.shields.io/pypi/dm/Django.svg?style=plastic)](https://pypi.python.org/pypi/django-informer)
+
 A pluggable app to monitoring your own infrastructure and third party services.
 
 Detailed documentation is in the "docs" directory.
