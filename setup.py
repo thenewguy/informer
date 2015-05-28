@@ -7,7 +7,7 @@ https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
 
-from setuptools import setup, find_packages
+from setuptools import setup
 from codecs import open
 from os import path, chdir, pardir
 
@@ -25,7 +25,8 @@ setup(
 
     version='0.1.0',
 
-    description='a pluggable app to monitoring your own infrastructure and third party services.',
+    description='a pluggable app to monitoring your own infrastructure and '
+        'third party services.',
     long_description=long_description,
 
     url='https://github.com/rodrigobraga/django-informer',
@@ -63,7 +64,7 @@ setup(
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
-    packages= ['informer'], # find_packages(),
+    packages=['informer'],
 
     # List run-time dependencies here.  These will be installed by pip when
     # your project is installed. For an analysis of "install_requires" vs pip's

@@ -52,7 +52,7 @@ class DatabaseInformer(BaseInformer):
             conn = connections['default']
             conn.introspection.table_names()
         except Exception as error:
-            raise InformerException('a error occured when trying access your '\
-                'database: %s' % error)
+            raise InformerException(
+                'a error occured when trying access your database: %s' % error)
         else:
             return True, 'your database is operational'

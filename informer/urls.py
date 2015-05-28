@@ -25,4 +25,4 @@ for namespace, classname in settings.DJANGO_INFORMERS:
     urlpatterns += patterns(
         '',
         url(r'^%s/$' % informer, API, data, name=name),
-    )    
+    )

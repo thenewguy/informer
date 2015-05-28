@@ -2,7 +2,7 @@
 
 """informer views"""
 
-from django.core.urlresolvers import reverse, get_resolver
+from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import View

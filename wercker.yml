@@ -9,6 +9,10 @@ build:
             code: py.test
 
         - script:
+            name: run flake
+            code: py.test --cov informer
+
+        - script:
             name: run code coverage
             code: py.test --cov informer
 

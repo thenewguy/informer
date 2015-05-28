@@ -3,10 +3,9 @@
 """informer tests for models"""
 
 import mock
-import json
 import pytest
 
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.db import connections
 
 from informer.models import BaseInformer, DatabaseInformer, InformerException
@@ -79,8 +78,5 @@ class DatabaseInformerTest(TestCase):
         informer = DatabaseInformer()
 
         m_mock.side_effect = Exception('Boom')
-
-        expected = (
-            False, 'a error occured when trying access your database: Boom')
 
         self.assertRaises(InformerException, informer.check)
