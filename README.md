@@ -8,7 +8,7 @@ Detailed documentation is in the "docs" directory.
 
 ## Quick start
 
-1. Add "informer" to your INSTALLED_APPS setting like this::
+1. Add "informer" to your INSTALLED_APPS setting like this
 
 ```
     INSTALLED_APPS = (
@@ -25,7 +25,7 @@ DJANGO_INFORMERS = (
 )
 ```
 
-3. Include the URLconf in your project urls.py like this::
+3. Include the URLconf in your project urls.py like this
 
 ```
     url(r'^informer/', include('informer.urls')),
