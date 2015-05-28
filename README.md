@@ -8,7 +8,7 @@ Detailed documentation is in the "docs" directory.
 
 ## Quick start
 
-1. Add "informer" to your INSTALLED_APPS setting like this
+1.Add "informer" to your INSTALLED_APPS setting like this
 
 ```
     INSTALLED_APPS = (
@@ -17,7 +17,7 @@ Detailed documentation is in the "docs" directory.
     )
 ```
 
-2. Include a list from informers on settings
+2.Include a list from informers on settings
 
 ```
 DJANGO_INFORMERS = (
@@ -25,12 +25,12 @@ DJANGO_INFORMERS = (
 )
 ```
 
-3. Include the URLconf in your project urls.py like this
+3.Include the URLconf in your project urls.py like this
 
 ```
     url(r'^informer/', include('informer.urls')),
 ```
 
-4. Run ```python manage.py migrate``` to create the informer models.
+4.Run ```python manage.py migrate``` to create the informer models.
 
-5. Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
+5.Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
