@@ -6,15 +6,15 @@ build:
 
         - script:
             name: run unit tests
-            code: py.test
+            code: py.test tests
 
         - script:
             name: run flake
-            code: py.test --cov informer
+            code: py.test informer --flake
 
         - script:
             name: run code coverage
-            code: py.test --cov informer
+            code: py.test tests --cov informer
 
         - script:
             name: build
