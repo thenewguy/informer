@@ -8,7 +8,10 @@ from django.conf.urls import url, patterns
 from informer.views import DefaultView, InformerDiscoverView
 from informer.views import InformerView
 
+
 API = InformerView.as_view()
+
+DJANGO_INFORMERS = getattr(settings, 'DJANGO_INFORMERS', ())
 
 urlpatterns = patterns(
     '',
@@ -17,7 +20,7 @@ urlpatterns = patterns(
         name='discover-informer'),
 )
 
-for namespace, classname in settings.DJANGO_INFORMERS:
+for namespace, classname in DJANGO_INFORMERS:
     data = {'namespace': namespace, 'classname': classname}
     informer = classname.replace('Informer', '').lower()
     name = 'informer-%s' % informer
