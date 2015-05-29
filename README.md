@@ -37,6 +37,10 @@ DJANGO_INFORMERS = (
     url(r'^informer/', include('informer.urls')),
 ```
 
-### Run ```python manage.py migrate``` to create the informer models.
+### Migrate
 
-### Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
+Run ```python manage.py migrate``` to create the informer models.
+
+### Run
+
+Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
