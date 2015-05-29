@@ -4,17 +4,17 @@
 
 A pluggable app to monitoring your own infrastructure and third party services.
 
-Detailed documentation is in the "docs" directory.
+Detailed documentation is in the [docs](docs) directory.
 
-## Quick start
+## Quick Start
 
-1. Install Django Informer
+### Install Django Informer
 
 ```
     pip install django_informer
 ```
 
-2.Add "informer" to your INSTALLED_APPS setting like this
+### Add "informer" to your INSTALLED_APPS setting like this
 
 ```
     INSTALLED_APPS = (
@@ -23,7 +23,7 @@ Detailed documentation is in the "docs" directory.
     )
 ```
 
-3.Set informers on settings
+### Set informers on settings
 
 ```
 DJANGO_INFORMERS = (
@@ -31,12 +31,12 @@ DJANGO_INFORMERS = (
 )
 ```
 
-4.Include the URLconf in your project urls.py like this
+### Include the URLconf in your project urls.py like this
 
 ```
     url(r'^informer/', include('informer.urls')),
 ```
 
-5.Run ```python manage.py migrate``` to create the informer models.
+### Run ```python manage.py migrate``` to create the informer models.
 
-6.Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
+### Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
