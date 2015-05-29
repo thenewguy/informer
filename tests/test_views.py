@@ -75,7 +75,7 @@ class InformerViewTest(TestCase):
         result = json.loads(response.content.decode())
 
         expected = {
-            'message': 'your database is operational',
+            'message': 'Your database is operational',
             'name': 'DatabaseInformer',
             'operational': True
         }
