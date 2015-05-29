@@ -1,10 +1,14 @@
-<!-- <h2 data-ng-cloak>{{ message }}</h2> -->
+    <!-- <h2 data-ng-cloak>{{ message }}</h2> -->
+
+<md-content layout-padding data-ng-if="informers.length < 1">
+    <p>No <em>Informer</em> was set.</p>
+</md-content>
 
 <div layout="row"
      layout-align="start center"
-     layout-wrap
-     data-ng-repeat="informer in informers">
-    <md-card flex="30">
+     layout-wrap>
+
+    <md-card flex="30" data-ng-repeat="informer in informers">
         <md-card-content>
             <h2>
                 {{ informer.name | name }}
