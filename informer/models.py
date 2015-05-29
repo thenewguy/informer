@@ -69,4 +69,4 @@ class DatabaseInformer(BaseInformer):
             raise InformerException(
                 'a error occured when trying access your database: %s' % error)
         else:
-            return True, 'your database is operational'
+            return True, 'Your database is operational'

@@ -110,7 +110,7 @@ class DatabaseInformerTest(TestCase):
         """
         informer = DatabaseInformer()
 
-        expected = (True, 'your database is operational')
+        expected = (True, 'Your database is operational')
 
         self.assertEqual(expected, informer.check())
 
