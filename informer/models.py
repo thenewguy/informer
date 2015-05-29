@@ -41,7 +41,8 @@ class BaseInformer(object):
         except ImportError:
             raise InformerException('%s is undefined.' % classname)
         except Exception as error:
-            raise InformerException('Unknown error: %s.' % error)
+            raise InformerException(
+                'A general exception occurred: %s.' % error)
         else:
             return cls
 
