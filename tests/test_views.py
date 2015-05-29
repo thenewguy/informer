@@ -60,13 +60,15 @@ class InformerViewTest(TestCase):
     Tests responses from Informer details
     """
 
+    def setUp(self):
+        self.client = Client()
+
     def test_get(self):
         """
         Test if 'details' from a specific Informer has a expected data
         """
-        client = Client()
 
-        response = client.get('/database/')
+        response = self.client.get('/database/')
 
         self.assertEqual(200, response.status_code)
 
@@ -87,16 +89,14 @@ class InformerViewTest(TestCase):
         """
         m_mock.side_effect = Exception('Boom')
 
-        client = Client()
-
-        response = client.get('/database/')
+        response = self.client.get('/database/')
 
         self.assertEqual(200, response.status_code)
 
         result = json.loads(response.content.decode())
 
         expected = {
-            'operational': False,
+            'operational': None,
             'name': 'DatabaseInformer',
             'message': 'a error occured when trying access your database: Boom'
         }

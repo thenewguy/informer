@@ -69,8 +69,6 @@ class InformerView(View):
         """
         cls = BaseInformer.get_class(namespace, classname)
 
-        informer = cls()
-
         result = {
             'name': classname,
             'operational': None,
@@ -78,12 +76,13 @@ class InformerView(View):
         }
 
         try:
+            informer = cls()
+
             operational, message = informer.check()
 
             result['operational'] = operational
             result['message'] = message
         except InformerException as error:
-            result['operational'] = False
             result['message'] = '%s' % error
 
         return JsonResponse(result)

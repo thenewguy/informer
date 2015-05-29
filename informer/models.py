@@ -29,11 +29,21 @@ class BaseInformer(object):
     @staticmethod
     def get_class(namespace, classname):
         """
-        Dynamic import from Informer Class
+        Dynamic import from Informer
         """
-        module = __import__(namespace, globals(), locals(), [classname])
+        try:
+            module = __import__(namespace, globals(), locals(), [classname])
+            cls = getattr(module, classname)
 
-        return getattr(module, classname)
+            if not issubclass(cls, BaseInformer):
+                raise InformerException('%s is not a Informer.' % classname)
+
+        except ImportError:
+            raise InformerException('%s is undefined.' % classname)
+        except Exception as error:
+            raise InformerException('Unknown error: %s.' % error)
+        else:
+            return cls
 
 
 class DatabaseInformer(BaseInformer):

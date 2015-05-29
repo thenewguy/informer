@@ -14,6 +14,13 @@ from informer.models import BaseInformer, DatabaseInformer, InformerException
 pytestmark = pytest.mark.django_db
 
 
+class BarInformer(object):
+    """
+    A class to help with tests
+    """
+    pass
+
+
 class BaseInformerTest(TestCase):
     """
     Tests to Base Class
@@ -45,6 +52,24 @@ class BaseInformerTest(TestCase):
         expected = isinstance(informer, (BaseInformer, DatabaseInformer))
 
         self.assertTrue(expected)
+
+    def test_get_class_without_a_class(self):
+        """
+        A exception is raised, when the Informer in the settings does not
+        exists
+        """
+        self.assertRaises(
+            InformerException,
+            BaseInformer.get_class, 'foo.models', 'BarInformer')
+
+    def test_get_class_with_class_that_not_a_informer(self):
+        """
+        A exception is raised, when the Informer in the settings is not a
+        Informer
+        """
+        self.assertRaises(
+            InformerException,
+            BaseInformer.get_class, 'tests.test_models.', 'BarInformer')
 
 
 class DatabaseInformerTest(TestCase):
