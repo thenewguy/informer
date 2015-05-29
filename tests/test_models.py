@@ -53,10 +53,18 @@ class BaseInformerTest(TestCase):
 
         self.assertTrue(expected)
 
-    def test_get_class_without_a_class(self):
+    def test_get_class_without_class_on_namespace(self):
         """
-        A exception is raised, when the Informer in the settings does not
-        exists
+        Test if exception handling works when class does not exists on
+        namespace
+        """
+        self.assertRaises(
+            InformerException,
+            BaseInformer.get_class, 'informer.models', 'BarInformer')
+
+    def test_get_class_with_unknown_class(self):
+        """
+        Test if exception handling works when an Informer is unknown
         """
         self.assertRaises(
             InformerException,
@@ -64,11 +72,22 @@ class BaseInformerTest(TestCase):
 
     def test_get_class_with_class_that_not_a_informer(self):
         """
-        A exception is raised, when the Informer in the settings is not a
-        Informer
+        Test if exception handling works when an Informer does not inherit from
+        BaseInformer
         """
         self.assertRaises(
             InformerException,
+            BaseInformer.get_class, 'tests.test_models.', 'BarInformer')
+
+    @mock.patch('__builtin__.__import__')
+    def test_get_class_failure(self, m_import):
+        """
+        Test if exception handling works when a generic error occurs
+        """
+        m_import.side_effect = Exception('Cataploft')
+
+        self.assertRaises(
+            Exception,
             BaseInformer.get_class, 'tests.test_models.', 'BarInformer')
 
 

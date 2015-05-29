@@ -9,7 +9,7 @@ docker-compose run --rm application py.test tests
 ## coverage
 
 ```
-docker-compose run --rm application py.test test --cov informer
+docker-compose run --rm application py.test --cov informer
 ```
 
 ### html report

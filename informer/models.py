@@ -34,17 +34,20 @@ class BaseInformer(object):
         try:
             module = __import__(namespace, globals(), locals(), [classname])
             cls = getattr(module, classname)
-
-            if not issubclass(cls, BaseInformer):
-                raise InformerException('%s is not a Informer.' % classname)
-
         except ImportError:
-            raise InformerException('%s is undefined.' % classname)
+            raise InformerException(
+                '%s is unknown or undefined.' % classname)
+        except AttributeError:
+            raise InformerException(
+                'The %s does not exists on %s.' % (classname, namespace))
         except Exception as error:
             raise InformerException(
                 'A general exception occurred: %s.' % error)
-        else:
-            return cls
+
+        if not issubclass(cls, BaseInformer):
+            raise InformerException('%s is not a Informer.' % classname)
+
+        return cls
 
 
 class DatabaseInformer(BaseInformer):

@@ -1,9 +1,10 @@
 <md-content>
     <h2>
         {{ informer.name | name }}
-        <small>
-            <md-icon data-ng-if="informer.operational" md-svg-icon="/static/django_informer/assets/images/ic_keyboard_arrow_up_48px.svg"></md-icon>
-            <md-icon data-ng-if="!informer.operational" md-svg-icon="/static/django_informer/assets/images/ic_keyboard_arrow_down_48px.svg"></md-icon>
+        <small ng-switch="informer.operational">
+            <md-icon style="color: green" data-ng-switch-when="true" md-svg-icon="/static/django_informer/assets/images/ic_keyboard_arrow_up_48px.svg"></md-icon>
+            <md-icon style="color: red" data-ng-switch-when="false" md-svg-icon="/static/django_informer/assets/images/ic_keyboard_arrow_down_48px.svg"></md-icon>
+            <md-icon data-ng-switch-default md-svg-icon="/static/django_informer/assets/images/ic_clear_48px.svg"></md-icon>
         </small>
     </h2>
     <p>{{ informer.message }}</p>
