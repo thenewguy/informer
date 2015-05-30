@@ -11,6 +11,8 @@ from setuptools import setup
 from codecs import open
 from os import path, chdir, pardir
 
+from informer import VERSION
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
@@ -23,7 +25,7 @@ chdir(path.normpath(path.join(path.abspath(__file__), pardir)))
 setup(
     name='django_informer',
 
-    version='0.1.3',
+    version=VERSION,
 
     description='a pluggable app to monitoring your own infrastructure and '
         'third party services.',
