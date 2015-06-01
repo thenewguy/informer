@@ -75,9 +75,9 @@ class InformerViewTest(TestCase):
         result = json.loads(response.content.decode())
 
         expected = {
-            'message': 'your database is operational',
-            'name': 'DatabaseInformer',
-            'operational': True
+            u'message': 'Your database is operational.',
+            u'name': 'DatabaseInformer',
+            u'operational': True
         }
 
         self.assertEqual(expected, result)
@@ -96,9 +96,9 @@ class InformerViewTest(TestCase):
         result = json.loads(response.content.decode())
 
         expected = {
-            'operational': None,
-            'name': 'DatabaseInformer',
-            'message': 'a error occured when trying access your database: Boom'
+            u'operational': None,
+            u'name': 'DatabaseInformer',
+            u'message': 'An error occured when trying access database: Boom'
         }
 
         self.assertEqual(expected, result)

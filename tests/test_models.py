@@ -9,6 +9,7 @@ from django.test import TestCase
 from django.db import connections
 
 from informer.models import BaseInformer, DatabaseInformer, InformerException
+from informer.models import StorageInformer
 
 
 pytestmark = pytest.mark.django_db
@@ -91,7 +92,7 @@ class DatabaseInformerTest(TestCase):
         """
         informer = DatabaseInformer()
 
-        expected = (True, 'your database is operational')
+        expected = (True, 'Your database is operational.')
 
         self.assertEqual(expected, informer.check())
 
@@ -105,3 +106,39 @@ class DatabaseInformerTest(TestCase):
         m_mock.side_effect = Exception('Boom')
 
         self.assertRaises(InformerException, informer.check)
+
+
+class StorageInformerTest(TestCase):
+    """
+    Tests to Storage Informer.
+    """
+
+    def test_unicode(self):
+        """
+        Test if Unicode is correctly specified.
+        """
+        informer = StorageInformer()
+        expected = u'Check if Storage is operational.'
+        self.assertEqual(expected, str(informer))
+
+    def test_check(self):
+        """
+        Test if with 'ideal scenario', all goes fine
+        """
+        informer = StorageInformer()
+
+        expected = (True, 'Your FileSystemStorage is operational.')
+
+        self.assertEqual(expected, informer.check())
+
+    @mock.patch('django.core.files.storage.Storage.save')
+    def test_check_fails(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = Exception('Boom')
+
+        informer = StorageInformer()
+
+        self.assertRaises(InformerException, informer.check)
+
