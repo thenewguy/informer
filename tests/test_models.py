@@ -160,4 +160,3 @@ class StorageInformerTest(TestCase):
         informer = StorageInformer()
 
         self.assertRaises(InformerException, informer.check)
-

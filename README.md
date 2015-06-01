@@ -28,6 +28,7 @@ Detailed documentation is in the [docs](docs) directory.
 ```
 DJANGO_INFORMERS = (
     ('informer.models', 'DatabaseInformer'),
+    ('informer.models', 'StorageInformer'),
 )
 ```
 
