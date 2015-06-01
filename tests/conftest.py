@@ -2,6 +2,8 @@ from django.conf import settings
 
 import os
 
+import djcelery
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -14,6 +16,7 @@ def pytest_configure():
             'django.contrib.sessions',
             'django.contrib.messages',
             'django.contrib.staticfiles',
+            'djcelery',
             'informer'),
         MIDDLEWARE_CLASSES = (
             'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,7 +44,12 @@ def pytest_configure():
         STATICFILES_DIRS = (
             os.path.join(BASE_DIR, 'static'),
         ),
-        DJANGO_INFORMERS=(
+        DJANGO_INFORMERS = (
             ('informer.models', 'DatabaseInformer'),
-        )
+        ),
+        BROKER_BACKEND = 'memory',
+        CELERY_ALWAYS_EAGER = True,
+        CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
     )
+
+    djcelery.setup_loader()

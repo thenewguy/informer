@@ -78,7 +78,7 @@ class InformerViewTest(TestCase):
             u'message': 'Your database is operational.',
             u'name': 'DatabaseInformer',
             u'operational': True
-       }
+        }
 
         self.assertEqual(expected, result)
 

@@ -7,9 +7,10 @@ import pytest
 
 from django.test import TestCase
 from django.db import connections
+from django.conf import settings
 
 from informer.models import BaseInformer, DatabaseInformer, InformerException
-from informer.models import StorageInformer
+from informer.models import StorageInformer, CeleryInformer
 
 
 pytestmark = pytest.mark.django_db
@@ -158,5 +159,61 @@ class StorageInformerTest(TestCase):
         m_mock.side_effect = Exception('Boom')
 
         informer = StorageInformer()
+
+        self.assertRaises(InformerException, informer.check)
+
+
+class CeleryInformerTest(TestCase):
+    """
+    Tests to Celery Informer.
+    """
+
+    def test_unicode(self):
+        """
+        Test if Unicode is correctly specified.
+        """
+        informer = CeleryInformer()
+        expected = u'Check if Celery is operational.'
+        self.assertEqual(expected, str(informer))
+
+    def test_check(self):
+        """
+        Test if with 'ideal scenario', all goes fine
+        """
+        informer = CeleryInformer()
+
+        expected = (True, 'Celery is operational.')
+
+        self.assertEqual(expected, informer.check())
+
+    @mock.patch.object(settings, 'INSTALLED_APPS')
+    def test_missing_configuration(self, m_mock):
+        mock.return_value = []
+
+        informer = CeleryInformer()
+
+        self.assertRaises(InformerException, informer.check)
+
+    @mock.patch('celery.result.EagerResult.successful')
+    def test_check_task_fail(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.return_value = False
+
+        informer = CeleryInformer()
+
+        expected = (False, 'Celery is out.')
+
+        self.assertEqual(expected, informer.check())
+
+    @mock.patch('informer.models.add.delay')
+    def test_check_fails(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = Exception('Boom')
+
+        informer = CeleryInformer()
 
         self.assertRaises(InformerException, informer.check)
