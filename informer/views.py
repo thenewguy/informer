@@ -67,7 +67,6 @@ class InformerView(View):
         """
         GET /informer/:name/
         """
-        cls = BaseInformer.get_class(namespace, classname)
 
         result = {
             'name': classname,
@@ -76,6 +75,8 @@ class InformerView(View):
         }
 
         try:
+            cls = BaseInformer.get_class(namespace, classname)
+
             informer = cls()
 
             operational, message = informer.check()

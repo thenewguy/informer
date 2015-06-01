@@ -13,7 +13,10 @@
 
         function successOnGetInformersList (response) {
             angular.forEach(response.informers, function (item) {
-                Informer.get({ 'informer': item.name }, successOnGetInformerDetails);
+                Informer.get(
+                    { 'informer': item.name },
+                    successOnGetInformerDetails,
+                    failureOnGetInformerDetails);
             });
         }
 
@@ -23,6 +26,10 @@
             }
 
             $scope.informers.push(response);
+        }
+
+        function failureOnGetInformerDetails (response) {
+            $scope.message = 'Problems were found.';
         }
 
         function fail () {

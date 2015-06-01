@@ -36,16 +36,20 @@ class BaseInformer(object):
         try:
             module = __import__(namespace, globals(), locals(), [classname])
             cls = getattr(module, classname)
-
-            if not issubclass(cls, BaseInformer):
-                raise InformerException('%s is not a Informer.' % classname)
-
         except ImportError:
-            raise InformerException('%s is undefined.' % classname)
+            raise InformerException(
+                '%s is unknown or undefined.' % classname)
+        except AttributeError:
+            raise InformerException(
+                'The %s does not exists on %s.' % (classname, namespace))
         except Exception as error:
-            raise InformerException('Unknown error: %s.' % error)
-        else:
-            return cls
+            raise InformerException(
+                'A general exception occurred: %s.' % error)
+
+        if not issubclass(cls, BaseInformer):
+            raise InformerException('%s is not a Informer.' % classname)
+
+        return cls
 
 
 class DatabaseInformer(BaseInformer):
@@ -83,6 +87,8 @@ class StorageInformer(BaseInformer):
         Perform check against Default Storage.
         """
         try:
+            # TODO: remove if already exists
+
             # Save data.
             content = ContentFile('File used by StorageInformer checking.')
             path = default_storage.save('./django-informer.txt', content)
@@ -98,8 +104,6 @@ class StorageInformer(BaseInformer):
             default_storage.delete(path)
 
             storage = default_storage.__class__.__name__
-
-            # default_storage.exists(path)
         except Exception as error:
             raise InformerException(
                 'A error occured when trying access your database: %s' % error)
