@@ -3,6 +3,7 @@ from django.conf import settings
 import os
 
 import djcelery
+djcelery.setup_loader()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -45,11 +46,9 @@ def pytest_configure():
             os.path.join(BASE_DIR, 'static'),
         ),
         DJANGO_INFORMERS = (
-            ('informer.models', 'DatabaseInformer'),
+            ('informer.checker.database', 'DatabaseInformer'),
         ),
         BROKER_BACKEND = 'memory',
         CELERY_ALWAYS_EAGER = True,
         CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
     )
-
-    djcelery.setup_loader()

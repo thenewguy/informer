@@ -9,7 +9,7 @@ from django.views.generic import View
 
 from django.conf import settings
 
-from informer.models import BaseInformer, InformerException
+from informer.checker.base import BaseInformer, InformerException
 
 
 class DefaultView(View):
