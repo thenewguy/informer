@@ -207,12 +207,23 @@ class CeleryInformerTest(TestCase):
 
         self.assertEqual(expected, informer.check())
 
-    @mock.patch('informer.models.add.delay')
+    @mock.patch('django.conf.settings.INSTALLED_APPS')
     def test_check_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
         """
         m_mock.side_effect = Exception('Boom')
+
+        informer = CeleryInformer()
+
+        self.assertRaises(InformerException, informer.check)
+
+    @mock.patch('celery.task.task')
+    def test_check_failure_if_celery_is_missing(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = ImportError('Boom')
 
         informer = CeleryInformer()
 

@@ -7,8 +7,6 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.conf import settings
 
-from celery.task import task
-
 
 class InformerException(Exception):
     """
@@ -114,14 +112,6 @@ class StorageInformer(BaseInformer):
             return True, 'Your %s is operational.' % storage
 
 
-@task()
-def add(a, b):
-    """
-    A simple function to help with checking.
-    """
-    return a + b
-
-
 class CeleryInformer(BaseInformer):
     """
     Celery Informer.
@@ -135,16 +125,28 @@ class CeleryInformer(BaseInformer):
         Perform check against default Celery configuration
         """
         try:
+            from celery.task import task
+
+            @task()
+            def calc(a, b):
+                """
+                A simple function to help with checking.
+                """
+                return a + b
+
             if 'djcelery' not in settings.INSTALLED_APPS:
                 raise InformerException(
                     'djcelery does not appear in the INSTALLED_APPS.')
 
-            result = add.delay(21, 21)
+            result = calc.delay(21, 21)
 
             if not result.successful():
                 return False, 'Celery is out.'
+        except ImportError:
+            raise InformerException(
+                'Celery is not installed.')
         except Exception as error:
             raise InformerException(
-                'An error occured when trying use Celery: %s' % error)
+                'An error occured when trying use Celery: %s.' % error)
         else:
             return True, 'Celery is operational.'
