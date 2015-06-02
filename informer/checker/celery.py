@@ -4,11 +4,11 @@
 
 from django.conf import settings
 
-
 from informer.checker.base import BaseInformer, InformerException
 
-
 from celery.task import task
+
+
 @task()
 def calc(a, b):
     """
