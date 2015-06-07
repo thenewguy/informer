@@ -12,7 +12,7 @@ from django.conf import settings
 from informer.checker.base import BaseInformer, InformerException
 from informer.checker.database import DatabaseInformer
 from informer.checker.storage import StorageInformer
-# from informer.checker.celery import CeleryInformer
+from informer.checker.celery import CeleryInformer
 
 
 pytestmark = pytest.mark.django_db
@@ -82,7 +82,7 @@ class BaseInformerTest(TestCase):
         """
         self.assertRaises(
             InformerException,
-            BaseInformer.get_class, 'tests.test_checker.', 'BarInformer')
+            BaseInformer.get_class, 'tests.test_checkers', 'BarInformer')
 
     @mock.patch('__builtin__.__import__')
     def test_get_class_failure(self, m_import):
@@ -166,8 +166,7 @@ class StorageInformerTest(TestCase):
         self.assertRaises(InformerException, informer.check)
 
 
-
-class CeleryInformerTemp(TestCase):
+class CeleryInformerTest(TestCase):
     """
     Tests to Celery Informer.
     """
@@ -175,68 +174,52 @@ class CeleryInformerTemp(TestCase):
     def test_unicode(self):
         """
         Test if Unicode is correctly specified.
+        """
         informer = CeleryInformer()
         expected = u'Check if Celery is operational.'
         self.assertEqual(expected, str(informer))
-        """
-        pass
 
     def test_check(self):
         """
         Test if with 'ideal scenario', all goes fine
+        """
         informer = CeleryInformer()
 
         expected = (True, 'Celery is operational.')
 
         self.assertEqual(expected, informer.check())
-        """
-        pass
-
-    @mock.patch.object(settings, 'INSTALLED_APPS')
-    def test_missing_configuration(self, m_mock):
-        """
-        mock.return_value = []
-
-        informer = CeleryInformer()
-
-        self.assertRaises(InformerException, informer.check)
-        """
-        pass
 
     @mock.patch('celery.result.EagerResult.successful')
     def test_check_task_fail(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
+        """
         m_mock.return_value = False
 
         informer = CeleryInformer()
 
-        expected = (False, 'Celery is out.')
+        expected = (False, 'Unable to queue the testing task.')
 
         self.assertEqual(expected, informer.check())
-        """
-        pass
 
-    @mock.patch('django.conf.settings.INSTALLED_APPS')
+    @mock.patch('celery.Celery.config_from_object')
     def test_check_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
-        m_mock.side_effect = Exception('Boom')
+        """
+        m_mock.side_effect = Exception('Cataploft')
 
         informer = CeleryInformer()
 
         self.assertRaises(InformerException, informer.check)
-        """
-        pass
 
-    @mock.patch('celery.task.task')
+    @mock.patch('celery.Celery.task')
     def test_check_failure_if_celery_is_missing(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
+        """
         m_mock.side_effect = ImportError('Boom')
 
         informer = CeleryInformer()
 
         self.assertRaises(InformerException, informer.check)
-        """
-        pass

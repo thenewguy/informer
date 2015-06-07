@@ -2,6 +2,7 @@ include DESCRIPTION.rst
 include README.md
 include informer/static/django_informer/package.json
 
+recursive-include informer/checker *
 recursive-include informer/templates *
 recursive-include informer/static/django_informer/app *
 recursive-include informer/static/django_informer/assets *

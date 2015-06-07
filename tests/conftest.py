@@ -1,9 +1,8 @@
+# coding: utf-8
+
 from django.conf import settings
 
 import os
-
-import djcelery
-djcelery.setup_loader()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -17,7 +16,6 @@ def pytest_configure():
             'django.contrib.sessions',
             'django.contrib.messages',
             'django.contrib.staticfiles',
-            'djcelery',
             'informer'),
         MIDDLEWARE_CLASSES = (
             'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,8 +45,12 @@ def pytest_configure():
         ),
         DJANGO_INFORMERS = (
             ('informer.checker.database', 'DatabaseInformer'),
+            ('informer.checker.storage', 'StorageInformer'),
+            ('informer.checker.database', 'CeleryInformer'),
         ),
         BROKER_BACKEND = 'memory',
+        BROKER_URL='memory://',
         CELERY_ALWAYS_EAGER = True,
         CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
+        CELERY_ACCEPT_CONTENT = ['json'],
     )

@@ -3,7 +3,6 @@ Django==1.8.2
 
 # tools and utilities
 celery==3.1.18
-django-celery==3.1.16
 ipython==3.0.0
 ipdb==0.8
 

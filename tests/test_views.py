@@ -46,9 +46,15 @@ class InformerDiscoverViewTest(TestCase):
         result = json.loads(response.content.decode())
 
         expected = {
-            'informers': [{
-                'url': '/database/',
-                'name': 'database'
+            u'informers': [{
+                u'url': u'/database/',
+                u'name': u'database'
+            }, {
+                u'url': u'/storage/',
+                u'name': u'storage'
+            }, {
+                u'url': u'/celery/',
+                u'name': u'celery'
             }]
         }
 

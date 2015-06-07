@@ -2,19 +2,11 @@
 
 """django informer checker for Celery"""
 
-from django.conf import settings
+from __future__ import absolute_import
+
+from celery.task.control import inspect
 
 from informer.checker.base import BaseInformer, InformerException
-
-from celery.task import task
-
-
-@task()
-def calc(a, b):
-    """
-    A simple function to help with checking.
-    """
-    return a + b
 
 
 class CeleryInformer(BaseInformer):
@@ -30,17 +22,17 @@ class CeleryInformer(BaseInformer):
         Perform check against default Celery configuration
         """
         try:
-            if 'djcelery' not in settings.INSTALLED_APPS:
-                raise InformerException(
-                    'djcelery does not appear in the INSTALLED_APPS.')
+            ins = inspect()
+            stats = ins.stats()
 
-            result = calc.delay(21, 21)
-
-            if not result.successful():
-                return False, 'Celery is out of running.'
-        except ImportError:
+            if not stats:
+                return False, 'No running Celery workers were found.'
+        except ImportError as error:
             raise InformerException(
-                'Celery is not installed.')
+                'Celery is not installed: %s' % error)
+        except IOError as error:
+            raise InformerException(
+                'Error connecting to the backend: %s' % error)
         except Exception as error:
             raise InformerException(
                 'An error occured when trying use Celery: %s.' % error)

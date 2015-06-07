@@ -5,5 +5,3 @@ application:
         - ./:/usr/src/app
     ports:
         - "8000:8000"
-    environment:
-        C_FORCE_ROOT: true
