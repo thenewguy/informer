@@ -48,7 +48,7 @@ def pytest_configure():
         DJANGO_INFORMERS = (
             ('informer.checker.database', 'DatabaseInformer'),
             ('informer.checker.storage', 'StorageInformer'),
-            ('informer.checker.database', 'CeleryInformer'),
+            ('informer.checker.celery', 'CeleryInformer'),
         ),
         BROKER_BACKEND = 'memory',
         BROKER_URL='memory://',

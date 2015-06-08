@@ -28,6 +28,8 @@ Detailed documentation is in the [docs](docs) directory.
 ```
 DJANGO_INFORMERS = (
     ('informer.checker.database', 'DatabaseInformer'),
+    ('informer.checker.storage', 'StorageInformer'),
+    ('informer.checker.celery', 'CeleryInformer'),
 )
 ```
 
