@@ -204,4 +204,24 @@ class CeleryInformerTest(TestCase):
 
         self.assertEqual(expected, informer.check())
 
-        # with self.assertRaises(InformerError):
+    @mock.patch('celery.app.control.Control.inspect')
+    def test_check_exceptions(self, mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+
+        # TODO: Fragment into various methods and check messages.
+
+        informer = CeleryInformer()
+
+        with self.assertRaises(InformerException):
+            mock.side_effect = IOError('Boom')
+            informer.check()
+
+        with self.assertRaises(InformerException):
+            mock.side_effect = ImportError('Boom')
+            informer.check()
+
+        with self.assertRaises(InformerException):
+            mock.side_effect = Exception('Boom')
+            informer.check()
