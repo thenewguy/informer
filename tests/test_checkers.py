@@ -179,47 +179,29 @@ class CeleryInformerTest(TestCase):
         expected = u'Check if Celery is operational.'
         self.assertEqual(expected, str(informer))
 
-    def test_check(self):
+    @mock.patch('celery.app.control.Control.inspect')
+    def test_check(self, mock):
         """
         Test if with 'ideal scenario', all goes fine
         """
+        mock.stats.return_value = { 'foo': 'bar '}
         informer = CeleryInformer()
 
         expected = (True, 'Celery is operational.')
 
         self.assertEqual(expected, informer.check())
 
-    @mock.patch('celery.result.EagerResult.successful')
-    def test_check_task_fail(self, m_mock):
+    @mock.patch('celery.app.control.Control.inspect')
+    def test_check_task_fail(self, mock):
         """
         Test if with 'broken scenario', all goes bad
         """
-        m_mock.return_value = False
+        mock().stats.return_value = None
 
         informer = CeleryInformer()
 
-        expected = (False, 'Unable to queue the testing task.')
+        expected = (False, 'No running Celery workers were found.')
 
         self.assertEqual(expected, informer.check())
 
-    @mock.patch('celery.Celery.config_from_object')
-    def test_check_fails(self, m_mock):
-        """
-        Test if with 'broken scenario', all goes bad
-        """
-        m_mock.side_effect = Exception('Cataploft')
-
-        informer = CeleryInformer()
-
-        self.assertRaises(InformerException, informer.check)
-
-    @mock.patch('celery.Celery.task')
-    def test_check_failure_if_celery_is_missing(self, m_mock):
-        """
-        Test if with 'broken scenario', all goes bad
-        """
-        m_mock.side_effect = ImportError('Boom')
-
-        informer = CeleryInformer()
-
-        self.assertRaises(InformerException, informer.check)
+        # with self.assertRaises(InformerError):
