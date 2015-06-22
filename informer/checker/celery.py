@@ -4,8 +4,6 @@
 
 from __future__ import absolute_import
 
-from celery.task.control import inspect
-
 from informer.checker.base import BaseInformer, InformerException
 
 
@@ -22,6 +20,8 @@ class CeleryInformer(BaseInformer):
         Perform check against default Celery configuration
         """
         try:
+            from celery.task.control import inspect
+
             ins = inspect()
             stats = ins.stats()
 
