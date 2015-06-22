@@ -13,9 +13,9 @@
             <h2>
                 {{ informer.name | name }}
                 <small ng-switch="informer.operational">
-                    <md-icon style="color: green" data-ng-switch-when="true" md-svg-icon="/static/django_informer/assets/images/ic_keyboard_arrow_up_48px.svg"></md-icon>
-                    <md-icon style="color: red" data-ng-switch-when="false" md-svg-icon="/static/django_informer/assets/images/ic_keyboard_arrow_down_48px.svg"></md-icon>
-                    <md-icon data-ng-switch-default md-svg-icon="/static/django_informer/assets/images/ic_clear_48px.svg"></md-icon>
+                    <i class="material-icons" data-ng-switch-when="true" style="color: green">keyboard_arrow_up</i>
+                    <i class="material-icons" data-ng-switch-when="false" style="color: red">keyboard_arrow_down</i>
+                    <i class="material-icons" data-ng-switch-default>clear</i>
                 </small>
             </h2>
             <p>
@@ -30,7 +30,7 @@
             <md-icon md-svg-icon="/static/django_informer/assets/images/ic_equalizer_48px.svg"></md-icon>
             -->
             <a href="#/detail/{{informer.name | name}}">
-                <md-icon md-svg-icon="/static/django_informer/assets/images/ic_launch_48px.svg"></md-icon>
+                <md-icon md-font-set="material-icons">launch</md-icon>
             </a>
         </md-card-footer>
     </md-card>

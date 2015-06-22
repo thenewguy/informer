@@ -1,14 +1,15 @@
 (function () {
     'use strict';
 
-    var app = angular.module('InformerApp', [
+    var app = angular.module('informer', [
         'ngRoute',
         'ngResource',
         'ngAria',
         'ngAnimate',
         'ngMaterial',
-        'Home',
-        'Checker'
+        'informer.settings',
+        'informer.home',
+        'informer.checker'
     ]);
 
     // default filters

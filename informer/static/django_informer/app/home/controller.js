@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var home = angular.module('Home', ['ngResource']);
+    var home = angular.module('informer.home', ['ngResource']);
 
     home.controller('DashboardController', ['$scope', 'InformerDiscoverService', 'InformerService', DashboardController]);
     

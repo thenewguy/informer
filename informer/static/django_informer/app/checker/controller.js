@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var checker = angular.module('Checker', ['ngResource']);
+    var checker = angular.module('informer.checker', ['ngResource']);
 
     checker.controller('DetailController', ['$scope', '$routeParams', 'InformerService', DetailController]);
 

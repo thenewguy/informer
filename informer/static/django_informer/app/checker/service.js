@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    var checker = angular.module('Checker');
+    var checker = angular.module('informer.checker');
 
     checker.factory('InformerDiscoverService', ['$resource', 'CONFIGURATION', InformerDiscoverService]);
     checker.factory('InformerService', ['$resource', 'CONFIGURATION', InformerService]);

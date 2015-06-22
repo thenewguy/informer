@@ -2,7 +2,7 @@
 
 describe('Home', function () {
 
-    beforeEach(module('InformerApp'));
+    beforeEach(module('informer.home'));
 
     describe('Dashboard Controller', function () {
         var scope, controller, httpBackend;
