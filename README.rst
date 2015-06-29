@@ -14,43 +14,43 @@ A pluggable app to monitoring your own infrastructure and third party services.
 Quick Start
 ------------
 
-Detailed documentation is in the `doc <doc>`_ directory.
+Detailed documentation is in the `docs <docs>`_ directory.
 
 Install Django Informer
 ------------
 
-  pip install django_informer
+``pip install django_informer``
 
 
 Add "informer" to your INSTALLED_APPS setting like this
 ------------
 
-  INSTALLED_APPS = (
+``INSTALLED_APPS = (
     ...
     'informer',
-  )
+  )``
 
 
 Set informers on settings
 ------------
   
-  DJANGO_INFORMERS = (
+``DJANGO_INFORMERS = (
     ('informer.checker.database', 'DatabaseInformer'),
     ('informer.checker.storage', 'StorageInformer'),
     ('informer.checker.celery', 'CeleryInformer'),
-  )
+  )``
 
 
 Include the URLconf in your project urls.py like this
 ------------
 
-  url(r'^informer/', include('informer.urls')),
+``url(r'^informer/', include('informer.urls')),``
 
 
 Run migrate to create the informer models
 ------------
 
-  python manage.py migrate
+``python manage.py migrate``
 
 Run
 ------------
