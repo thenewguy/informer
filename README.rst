@@ -20,7 +20,6 @@ Install Django Informer
 ------------
 
 ::
-
     pip install django_informer
 
 
@@ -28,7 +27,6 @@ Add "informer" to your INSTALLED_APPS setting like this
 ------------
 
 ::
-
     INSTALLED_APPS = (
         ...
         'informer',
