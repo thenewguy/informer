@@ -24,7 +24,7 @@ Install Django Informer
     pip install django_informer
 
 
-Add "informer" to your INSTALLED_APPS setting like this
+Add "informer" to your INSTALLED_APPS
 -----------------
 
 ::
@@ -47,7 +47,7 @@ Set informers on settings
     )
 
 
-Include the URLconf in your project urls.py like this
+Include the URLconf in your project urls.py
 -----------------
 
 ::
