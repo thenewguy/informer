@@ -24,7 +24,7 @@ Install Django Informer
     pip install django_informer
 
 
-Add "informer" to your INSTALLED_APPS
+Add to your INSTALLED_APPS
 -----------------
 
 ::
@@ -65,6 +65,6 @@ Run migrate to create the informer models
 Run
 -----------------
 
-Start the development server and visit http://127.0.0.1:8000/informer/ to view monitoring results.
+Start the development server and visit http://server:port/informer/ to view monitoring results.
 
 .. _doc: https://github.com/rodrigobraga/informer/tree/master/docs
