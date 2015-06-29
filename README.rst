@@ -14,7 +14,7 @@ A pluggable app to monitoring your own infrastructure and third party services.
 Quick Start
 ------------
 
-Detailed documentation is in the _docs directory.
+Detailed documentation is in the `doc <doc>`_ directory.
 
 Install Django Informer
 ------------
