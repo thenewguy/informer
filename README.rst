@@ -20,42 +20,47 @@ Install Django Informer
 -----------------
 
 ::
-  pip install django_informer
+
+    pip install django_informer
 
 
 Add "informer" to your INSTALLED_APPS setting like this
 -----------------
 
 ::
-  INSTALLED_APPS = (
-    ...
-    'informer',
-  )
+
+    INSTALLED_APPS = (
+      ...
+      'informer',
+    )
 
 
 Set informers on settings
 -----------------
   
 ::
-  DJANGO_INFORMERS = (
-    ('informer.checker.database', 'DatabaseInformer'),
-    ('informer.checker.storage', 'StorageInformer'),
-    ('informer.checker.celery', 'CeleryInformer'),
-  )
+
+    DJANGO_INFORMERS = (
+        ('informer.checker.database', 'DatabaseInformer'),
+        ('informer.checker.storage', 'StorageInformer'),
+        ('informer.checker.celery', 'CeleryInformer'),
+    )
 
 
 Include the URLconf in your project urls.py like this
 -----------------
 
 ::
-  url(r'^informer/', include('informer.urls')),
+
+    url(r'^informer/', include('informer.urls')),
 
 
 Run migrate to create the informer models
 -----------------
 
 ::
-  python manage.py migrate
+
+    python manage.py migrate
 
 Run
 -----------------
