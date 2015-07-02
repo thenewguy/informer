@@ -8,4 +8,8 @@ install:
   - "pip install -r container/requirements.txt"
 
 # run tests
-script: py.test tests
+script:
+    - py.test tests
+    - py.test informer --flake
+    - py.test tests --cov informer
+    # - python setup.py sdist bdist_wheel
