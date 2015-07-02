@@ -1,1 +1,1 @@
-FROM django:python2-onbuild
+FROM python:2.7.10-onbuild
