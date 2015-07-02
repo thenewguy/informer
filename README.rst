@@ -1,7 +1,7 @@
 Django Informer
 ==============
 
-.. image:: https://img.shields.io/travis/rodrigobraga/informer
+.. image:: https://img.shields.io/travis/rodrigobraga/informer.svg
     :alt: Travis CI Status
     :target: https://travis-ci.org/rodrigobraga/informer
 
