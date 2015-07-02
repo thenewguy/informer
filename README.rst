@@ -5,6 +5,10 @@ Django Informer
     :alt: Travis CI Status
     :target: https://travis-ci.org/rodrigobraga/informer
 
+.. image:: https://coveralls.io/repos/rodrigobraga/informer/badge.svg
+  :alt: Coverage status
+  :target: https://coveralls.io/r/rodrigobraga/informer
+
 .. image:: https://img.shields.io/pypi/v/django-informer.svg
    :alt: PyPi page
    :target: https://pypi.python.org/pypi/django-informer
