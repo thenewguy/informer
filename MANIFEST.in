@@ -1,5 +1,5 @@
 include DESCRIPTION.rst
-include README.md
+include README.rst
 include informer/static/django_informer/package.json
 
 recursive-include informer/checker *

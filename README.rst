@@ -1,6 +1,10 @@
 Django Informer
 ==============
 
+.. image:: https://img.shields.io/travis/rodrigobraga/informer
+    :alt: Travis CI Status
+    :target: https://travis-ci.org/rodrigobraga/informer
+
 .. image:: https://img.shields.io/pypi/v/django-informer.svg
    :alt: PyPi page
    :target: https://pypi.python.org/pypi/django-informer
