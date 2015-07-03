@@ -1,14 +1,12 @@
-<md-content>
-    <h2>
-        {{ informer.name | name }}
-        <small ng-switch="informer.operational">
-            <i class="material-icons" data-ng-switch-when="true" style="color: green">keyboard_arrow_up</i>
-            <i class="material-icons" data-ng-switch-when="false" style="color: red">keyboard_arrow_down</i>
-            <i class="material-icons" data-ng-switch-default>clear</i>
-        </small>
-    </h2>
-    <p>{{ informer.message }}</p>
-    <a href="#/dashboard/">
-        <md-icon md-font-set="material-icons">keyboard_backspace</md-icon>
-    </a>
-</md-content>
+<h2>
+    {{ informer.name | name }}
+    <small ng-switch="informer.operational">
+        <i class="material-icons" data-ng-switch-when="true" style="color: green">keyboard_arrow_up</i>
+        <i class="material-icons" data-ng-switch-when="false" style="color: red">keyboard_arrow_down</i>
+        <i class="material-icons" data-ng-switch-default>clear</i>
+    </small>
+</h2>
+<p>{{ informer.message }}</p>
+<a href="#/dashboard/">
+    <md-icon md-font-set="material-icons">keyboard_backspace</md-icon>
+</a>
