@@ -75,4 +75,14 @@ Run
 
 Start the development server and visit http://server:port/informer/ to view monitoring results.
 
+
+Tests
+-----------------
+
+
+::
+
+    py.test tests
+
+
 .. _doc: https://github.com/rodrigobraga/informer/tree/master/docs
