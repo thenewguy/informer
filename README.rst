@@ -79,7 +79,6 @@ Start the development server and visit http://server:port/informer/ to view moni
 Tests
 -----------------
 
-
 ::
 
     py.test tests
