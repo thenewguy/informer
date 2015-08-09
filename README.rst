@@ -70,11 +70,6 @@ Run migrate to create the informer models
 
     python manage.py migrate
 
-Run
------------------
-
-Start the development server and visit http://server:port/informer/ to view monitoring results.
-
 
 Tests
 -----------------
@@ -82,6 +77,12 @@ Tests
 ::
 
     py.test tests
+
+
+Run
+-----------------
+
+Start the development server and visit http://server:port/informer/ to view monitoring results.
 
 
 .. _doc: https://github.com/rodrigobraga/informer/tree/master/docs

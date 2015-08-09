@@ -23,10 +23,6 @@ pytestmark = pytest.mark.django_db
 
 
 class CheckInformerTest(TestCase):
-    """def setUp(self):
-        import ipdb; ipdb.set_trace()
-        super(CheckInformerTest, cls).setUpClass()"""
-
     def test_command_list(self):
         out = StringIO()
         call_command('checkinformers', '--list', stdout=out)
