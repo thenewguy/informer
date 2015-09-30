@@ -5,7 +5,7 @@ python:
 
 # install dependencies
 install:
-  - "pip install -r container/requirements.txt"
+  - "pip install -r containers/application/requirements.txt"
 
 # run tests
 script:
