@@ -1,7 +1,13 @@
 application:
-    build: container
+    build: containers/application
     working_dir: /usr/src/app
     volumes:
         - ./:/usr/src/app
     ports:
         - "8000:8000"
+
+interface:
+    build: containers/interface
+    working_dir: /usr/src/app
+    volumes:
+        - ./informer/static/django_informer/:/usr/src/app
