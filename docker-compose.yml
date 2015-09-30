@@ -6,6 +6,16 @@ application:
     ports:
         - "8000:8000"
 
+sample:
+    build: containers/sample
+    working_dir: /usr/src/app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+        - ./sample/sample/:/usr/src/app
+        - ./informer/:/usr/src/app/informer
+    ports:
+        - "8000:8000"
+
 interface:
     build: containers/interface
     working_dir: /usr/src/app
