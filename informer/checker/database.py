@@ -13,7 +13,7 @@ class DatabaseInformer(BaseInformer):
     """
 
     def __str__(self):
-        return u'Check if database is operational.'
+        return u'Check if Database is operational.'
 
     def check(self):
         """

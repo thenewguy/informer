@@ -5,19 +5,9 @@
 import mock
 import pytest
 
-from django.core.management.base import BaseCommand, CommandError
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.utils.six import StringIO
-
-from django.db import connections
-from django.conf import settings
-
-from informer.checker.base import BaseInformer, InformerException
-from informer.checker.database import DatabaseInformer
-from informer.checker.storage import StorageInformer
-from informer.checker.celery import CeleryInformer
-
 
 pytestmark = pytest.mark.django_db
 
@@ -47,7 +37,7 @@ class CheckInformerTest(TestCase):
 
         expected = [
             'Checking Informers.',
-            'Checking StorageInformer... Your FileSystemStorage is '\
+            'Checking StorageInformer... Your FileSystemStorage is '
             'operational.']
 
         result = out.getvalue()

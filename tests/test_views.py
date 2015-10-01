@@ -55,6 +55,9 @@ class InformerDiscoverViewTest(TestCase):
             }, {
                 u'url': u'/celery/',
                 u'name': u'celery'
+            }, {
+                u'url': u'/cache/',
+                u'name': u'cache'
             }]
         }
 

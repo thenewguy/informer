@@ -35,6 +35,12 @@ def pytest_configure():
                 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
             }
         },
+        CACHES = {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+                'LOCATION': 'unique-snowflake',
+            }
+        },
         TEMPLATES = [{
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'APP_DIRS': True,
@@ -49,6 +55,7 @@ def pytest_configure():
             ('informer.checker.database', 'DatabaseInformer'),
             ('informer.checker.storage', 'StorageInformer'),
             ('informer.checker.celery', 'CeleryInformer'),
+            ('informer.checker.celery', 'CacheInformer'),
         ),
         BROKER_BACKEND = 'memory',
         BROKER_URL='memory://',

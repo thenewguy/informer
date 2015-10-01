@@ -1,18 +1,19 @@
 # coding: utf-8
 
-"""informer tests for checkers"""
+"""Informer tests for checkers"""
 
 import mock
 import pytest
 
 from django.test import TestCase
+from django.core.cache import cache
 from django.db import connections
-from django.conf import settings
 
 from informer.checker.base import BaseInformer, InformerException
 from informer.checker.database import DatabaseInformer
 from informer.checker.storage import StorageInformer
 from informer.checker.celery import CeleryInformer
+from informer.checker.cache import CacheInformer
 
 
 pytestmark = pytest.mark.django_db
@@ -106,7 +107,7 @@ class DatabaseInformerTest(TestCase):
         Test if Unicode is correctly specified
         """
         informer = DatabaseInformer()
-        expected = u'Check if database is operational.'
+        expected = u'Check if Database is operational.'
         self.assertEqual(expected, str(informer))
 
     def test_check(self):
@@ -184,7 +185,7 @@ class CeleryInformerTest(TestCase):
         """
         Test if with 'ideal scenario', all goes fine
         """
-        mock.stats.return_value = { 'foo': 'bar '}
+        mock.stats.return_value = {'foo': 'bar '}
         informer = CeleryInformer()
 
         expected = (True, 'Celery is operational.')
@@ -225,3 +226,38 @@ class CeleryInformerTest(TestCase):
         with self.assertRaises(InformerException):
             mock.side_effect = Exception('Boom')
             informer.check()
+
+
+class CacheInformerTest(TestCase):
+    """
+    Tests to Cache Informer
+    """
+
+    def test_unicode(self):
+        """
+        Test if Unicode is correctly specified
+        """
+        informer = CacheInformer()
+        expected = u'Check if Cache is operational.'
+        self.assertEqual(expected, str(informer))
+
+    def test_check(self):
+        """
+        Test if with 'ideal scenario', all goes fine
+        """
+        informer = CacheInformer()
+
+        expected = (True, 'Your cache system is operational.')
+
+        self.assertEqual(expected, informer.check())
+
+    @mock.patch.object(cache, 'get')
+    def test_check_fails(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        informer = CacheInformer()
+
+        m_mock.side_effect = Exception('Boom')
+
+        self.assertRaises(InformerException, informer.check)
