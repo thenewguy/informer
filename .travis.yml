@@ -10,7 +10,7 @@ install:
 # run tests
 script:
     - py.test tests
-    - py.test informer --flake
+    - py.test tests informer --flake
     - py.test tests --cov informer
     # - python setup.py sdist bdist_wheel
 
