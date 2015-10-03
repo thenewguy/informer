@@ -4,7 +4,7 @@
     var home = angular.module('informer.home', ['ngResource']);
 
     home.controller('DashboardController', ['$scope', 'InformerDiscoverService', 'InformerService', DashboardController]);
-    
+
     function DashboardController ($scope, Discover, Informer) {
         $scope.informers = [];
         $scope.message = 'All systems operational.';
@@ -29,7 +29,7 @@
         }
 
         function failureOnGetInformerDetails (response) {
-            $scope.message = 'Problems were found.';
+            $scope.message = 'Some problems were found.';
         }
 
         function fail () {

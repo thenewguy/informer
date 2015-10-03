@@ -1,37 +1,26 @@
-<!-- h2 data-ng-cloak>{{ message }}</h2 -->
+<p ng-cloak ng-if="informers.length < 1">No <em>Informer</em> was set.</p>
 
-<md-content layout-padding data-ng-if="informers.length < 1">
-    <p>No <em>Informer</em> was set.</p>
-</md-content>
+<div    layout-sm="column"
+        layout-gt-sm="row"
+        layout-wrap>
 
-<div layout="row"
-     layout-align="start center"
-     layout-wrap>
-
-    <md-card flex="30" data-ng-repeat="informer in informers">
+    <md-card    flex="30"
+                ng-repeat="informer in informers"
+                ng-mouseenter="hover = 'md-whiteframe-5dp'"
+                ng-mouseleave="hover = ''"
+                ng-class="hover">
         <md-card-content>
-            <h2>
-                {{ informer.name | name }}
-                <small ng-switch="informer.operational">
-                    <i class="material-icons" data-ng-switch-when="true" style="color: green">keyboard_arrow_up</i>
-                    <i class="material-icons" data-ng-switch-when="false" style="color: red">keyboard_arrow_down</i>
-                    <i class="material-icons" data-ng-switch-default>clear</i>
-                </small>
-            </h2>
-            <p>
-                {{ informer.message | limitTo : 40}}
-                {{ informer.message.length > 40 ? '...' : '' }}
-            </p>
+            <h2 class="md-title">{{ informer.name | name }}</h2>
+            <p>{{ informer.message | limitTo : 45 }}</p>
+            <small ng-switch="informer.operational">
+                <i class="material-icons" ng-switch-when="true">keyboard_arrow_up</i>
+                <i class="material-icons" ng-switch-when="false">keyboard_arrow_down</i>
+                <i class="material-icons" ng-switch-default>clear</i>
+            </small>
         </md-card-content>
-
-        <md-card-footer>
-            <!--
-            <md-icon md-svg-icon="/static/django_informer/assets/images/ic_trending_up_48px.svg"></md-icon>
-            <md-icon md-svg-icon="/static/django_informer/assets/images/ic_equalizer_48px.svg"></md-icon>
-            -->
-            <a href="#/detail/{{informer.name | name}}">
-                <md-icon md-font-set="material-icons">launch</md-icon>
-            </a>
-        </md-card-footer>
+        <div class="md-actions" layout="row" layout-align="end center">
+            <md-button href="#/detail/{{informer.name | name}}">details</md-button>
+        </div>
     </md-card>
+
 </div>

@@ -17,24 +17,14 @@
 
         <title>Informer &middot; a pluggable app to monitoring your own infrastructure and third party services.</title>
     </head>
-    <body data-ng-cloak>
+    <body ng-cloak>
+        {% block content %}{% endblock %}
 
-        <div layout="column" layout-fill>
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <md-button href="#/dashboard">
-                        <md-icon md-font-set="material-icons">chat_bubble_outline</md-icon>
-                    </md-button>
-                    <span>Informer</span>
-                    <span flex></span>
-                    <md-button ng-href="https://github.com/rodrigobraga/informer">
-                        <md-icon md-font-set="material-icons">info_outline</md-icon>
-                    </md-button>
-                </div>
-            </md-toolbar>
-            <md-content layout-padding>
-                {% block content %}{% endblock %}
-            </md-content>
+        <div layout="row" layout-align="center end">
+            <a href="https://github.com/rodrigobraga/informer">
+                <md-tooltip>get more info about Informer</md-tooltip>
+                <i class="material-icons">code</i>
+            </a>
         </div>
 
         <!-- Angular JS -->
