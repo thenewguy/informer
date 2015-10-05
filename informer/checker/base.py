@@ -2,6 +2,8 @@
 
 """django informer checker base"""
 
+from informer.signals import post_check
+
 
 class InformerException(Exception):
     """
@@ -18,11 +20,11 @@ class BaseInformer(object):
     def __str__(self):
         return u'A small and explicit description from informer.'
 
-    def check(self):
-        """
-        Performs the check.
-        """
+    def inspect(self):
         raise NotImplementedError
+
+    def run(self):
+        post_check.send(sender=self.__class__, metric='on', value=True)
 
     @staticmethod
     def get_class(namespace, classname):
@@ -46,3 +48,12 @@ class BaseInformer(object):
             raise InformerException('%s is not a Informer.' % classname)
 
         return cls
+
+
+def generate_raw_data(sender, *args, **kwargs):
+    """
+    Generate raw data from Database checker.
+    """
+    pass
+
+post_check.connect(generate_raw_data, sender=BaseInformer)
