@@ -55,7 +55,7 @@ def pytest_configure():
             ('informer.checker.database', 'DatabaseInformer'),
             ('informer.checker.storage', 'StorageInformer'),
             ('informer.checker.celery', 'CeleryInformer'),
-            ('informer.checker.celery', 'CacheInformer'),
+            ('informer.checker.cache', 'CacheInformer'),
         ),
         BROKER_BACKEND = 'memory',
         BROKER_URL='memory://',
