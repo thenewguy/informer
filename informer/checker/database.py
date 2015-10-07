@@ -8,13 +8,17 @@ from django.conf import settings
 from django.db import connections
 
 from informer.checker.base import BaseInformer, InformerException
+from informer.models import Raw
 
 
-def collect_metrics(check):
-    def wrapper(*args, **kwargs):
-        print 'generate raw data'
+def collect(func):
+    """
+    Collect metrics.
+    """
 
-        return check(*args, **kwargs)
+    def wrapper(instance, *args, **kwargs):
+        instance._collect_metrics()
+        return func(instance)
 
     return wrapper
 
@@ -27,21 +31,11 @@ class DatabaseInformer(BaseInformer):
     def __str__(self):
         return u'Check if Database is operational.'
 
-    def inspect(self, check):
-        def wrapper(*args, **kwargs):
-            print 'INSPECT ------- '
-
-        return check(*args, **kwargs)
-
-        return wrapper
-
-    @inspect
+    @collect
     def check(self):
         """
         Inspect default database configuration.
         """
-        print '\n\n', ':: Perform Checking'
-        print '-' * 100
 
         try:
             conn = connections['default']
@@ -51,3 +45,18 @@ class DatabaseInformer(BaseInformer):
                 'An error occured when trying access database: %s' % error)
         else:
             return True, 'Your database is operational.'
+
+    def _collect_metrics(self):
+        """
+        'Discovery' of the methods that collect the metrics of this informer.
+        """
+        collectors = [c for c in dir(self) if c.startswith('_collect_')]
+
+        for collector in collectors:
+            getattr(self, collector, None)()
+
+    def _collect_uptime(self):
+        print '-' * 5, 'UPTIME', '-' * 5
+        #Raw.objects.get_or_create(
+        #    indicator=self.__class__.__name__, measure='uptime', value=True)
+

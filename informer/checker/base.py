@@ -11,6 +11,9 @@ class InformerException(Exception):
     """
     pass
 
+    def __call__(self):
+        print 'CALL Exception'
+
 
 class BaseInformer(object):
     """
