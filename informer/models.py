@@ -9,7 +9,7 @@ from django.db import models
 
 class Raw(models.Model):
     """"
-    Raw data collected by informer checker.
+    Raw data collected by informer.
     """
 
     indicator = models.CharField(max_length=255)

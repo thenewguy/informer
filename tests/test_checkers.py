@@ -120,6 +120,9 @@ class DatabaseInformerTest(TestCase):
 
         self.assertEqual(expected, informer.check())
 
+        from informer.models import Raw
+        print Raw.objects.all()
+
     @mock.patch.object(connections['default'].introspection, 'table_names')
     def test_check_fails(self, m_mock):
         """
