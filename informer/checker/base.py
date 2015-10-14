@@ -4,9 +4,7 @@
 django informer checker base
 """
 
-import types
-
-from informer.models import Raw
+from informer.models import post_check
 
 
 class InformerException(Exception):
@@ -16,37 +14,31 @@ class InformerException(Exception):
     pass
 
 
-class RawManager(type):
-
-    prefix = 'check_'
-
-    @staticmethod
-    def save(func):
-        def helper(instance, *args, **kwargs):
-            result = func(instance, *args, **kwargs)
-
-            Raw.objects.get_or_create(
-                indicator=instance.__class__.__name__,
-                measure=func.func_name.replace('check_', ''),
-                value=result[0])
-
-            return result
-
-        return helper
+class Collector(type):
+    """
+    A helper to automate the bind of the collector of measurements.
+    """
 
     @staticmethod
     def trigger(func):
         """
-        Trigger added to 'check' method, to run all checks specified by prefix.
+        Trigger fired after checking by the signal.
         """
         def helper(instance, *args, **kwargs):
             result = func(instance, *args, **kwargs)
 
-            collectors = [c for c in dir(instance)\
-                if c.startswith(RawManager.prefix)]
+            # save default (availability)
+            post_check.send(
+                sender=instance, measure='availability', value=result[0])
+
+            # run others checks
+            attrs = dir(instance)
+            collectors = [attr for attr in attrs if attr.startswith('check_')]
 
             for collector in collectors:
-                getattr(instance, collector, None)()
+                value = getattr(instance, collector, None)()
+                post_check.send(
+                    sender=instance, measure=collector, value=value)
 
             return result
 
@@ -54,27 +46,8 @@ class RawManager(type):
 
     def __new__(cls, clsname, superclasses, attributedict):
         """
-        On instantiation, the triggers are added.
+        On instantiation, the trigger is added.
         """
-
-        for item in attributedict:
-            attr = attributedict[item]
-
-            if not callable(attr):
-                continue
-
-            if not isinstance(attr, types.FunctionType):
-                continue
-
-            if not attr.func_name.startswith('check_'):
-                continue
-
-            name = attr.func_name
-
-            # bind method that start with 'check_'.
-            attributedict[name] = cls.save(attributedict[name])
-
-        # bind method 'check' to trigger all checks.
         attributedict['check'] = cls.trigger(attributedict['check'])
 
         return type.__new__(cls, clsname, superclasses, attributedict)
@@ -85,7 +58,7 @@ class BaseInformer(object):
     A base class to serve as infrastructure to new 'Informers'.
     """
 
-    __metaclass__ = RawManager
+    __metaclass__ = Collector
 
     def __str__(self):
         return u'A small and explicit description from informer.'

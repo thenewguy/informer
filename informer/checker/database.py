@@ -4,11 +4,9 @@
 django informer checker for Database
 """
 
-from django.conf import settings
 from django.db import connections
 
 from informer.checker.base import BaseInformer, InformerException
-from informer.models import Raw
 
 
 class DatabaseInformer(BaseInformer):
@@ -31,6 +29,3 @@ class DatabaseInformer(BaseInformer):
                 'An error occured when trying access database: %s' % error)
         else:
             return True, 'Your database is operational.'
-
-    def check_latency(self):
-        return 'LATENCY ---------- ', 10

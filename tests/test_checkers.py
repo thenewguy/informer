@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""Informer tests for checkers"""
+"""
+Informer tests for checkers
+"""
 
 import mock
 import pytest
@@ -119,9 +121,6 @@ class DatabaseInformerTest(TestCase):
         expected = (True, 'Your database is operational.')
 
         self.assertEqual(expected, informer.check())
-
-        from informer.models import Raw
-        print Raw.objects.all()
 
     @mock.patch.object(connections['default'].introspection, 'table_names')
     def test_check_fails(self, m_mock):

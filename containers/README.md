@@ -15,7 +15,7 @@ docker-compose run --rm application py.test tests --cov informer
 ### html report
 
 ```
-docker-compose run --rm application py.test --cov-report html --cov informer
+docker-compose run --rm application py.test tests --cov-report html --cov informer
 ```
 
 ## flake
