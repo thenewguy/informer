@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""django informer checker for Celery"""
+"""
+django informer checker for Celery
+"""
 
 from __future__ import absolute_import
 
