@@ -56,6 +56,14 @@ Set informers on settings
     )
 
 
+Set minimum interval (in minutes) between the saved results
+-----------------
+
+::
+
+    DJANGO_INFORMER_PREVENT_SAVE_UNTIL = 5 # default is None
+
+
 Include the URLconf in your project urls.py
 -----------------
 

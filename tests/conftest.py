@@ -57,6 +57,7 @@ def pytest_configure():
             ('informer.checker.celery', 'CeleryInformer'),
             ('informer.checker.cache', 'CacheInformer'),
         ),
+        DJANGO_INFORMER_PREVENT_SAVE_UNTIL = 5,
         BROKER_BACKEND = 'memory',
         BROKER_URL='memory://',
         CELERY_ALWAYS_EAGER = True,

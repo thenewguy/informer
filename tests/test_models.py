@@ -4,10 +4,14 @@
 informer tests for models
 """
 
-from django.test import TestCase
+import mock
+
+from django.test import TestCase, override_settings
 from django.db import models
 
-from informer.models import Raw
+from informer.models import Raw, generate_raw_data
+from informer.checker.base import BaseInformer
+from informer.factories import RawFactory
 
 
 class RawTestCase(TestCase):
@@ -32,3 +36,32 @@ class RawTestCase(TestCase):
         raw = Raw(indicator='Foo', measure='Bar', value=True)
 
         self.assertEqual(expected, str(raw))
+
+    @mock.patch.object(Raw.objects, 'get_or_create')
+    def test_generate_raw_data(self, m_get_or_create):
+        generate_raw_data(BaseInformer(), 'foo', 'bar')
+
+        m_get_or_create.assert_called_once_with(
+            indicator='Base', value='bar', measure='foo')
+
+    @override_settings(DJANGO_INFORMER_PREVENT_SAVE_UNTIL=None)
+    @mock.patch.object(Raw.objects, 'get_or_create')
+    def test_no_generate_raw_data(self, m_get_or_create):
+        """
+        If interval was not defined, does not generate the raw data.
+        """
+        generate_raw_data(BaseInformer(), 'foo', 'bar')
+
+        self.assertFalse(m_get_or_create.called)
+
+    @mock.patch.object(Raw.objects, 'get_or_create')
+    def test_no_generate_raw_data_if_limit_not_exceeded(self, m_get_or_create):
+        """
+        Prevents the generation of multiple data when the limit was not
+        exceeded.
+        """
+        RawFactory(indicator='Base', measure='foo', value='bar')
+
+        generate_raw_data(BaseInformer(), 'foo', 'bar')
+
+        self.assertFalse(m_get_or_create.called)
