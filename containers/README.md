@@ -6,6 +6,12 @@
 docker-compose run --rm application py.test tests
 ```
 
+## flake
+
+```
+docker-compose run --rm application py.test tests informer --flake
+```
+
 ## coverage
 
 ```
@@ -16,12 +22,6 @@ docker-compose run --rm application py.test tests --cov informer
 
 ```
 docker-compose run --rm application py.test tests --cov-report html --cov informer
-```
-
-## flake
-
-```
-docker-compose run --rm application py.test tests informer --flake
 ```
 
 ## _build_
