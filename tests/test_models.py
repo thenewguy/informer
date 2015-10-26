@@ -5,9 +5,12 @@ informer tests for models
 """
 
 import mock
+from datetime import datetime
 
 from django.test import TestCase, override_settings
 from django.db import models
+
+from freezegun import freeze_time
 
 from informer.models import Raw, generate_raw_data
 from informer.checker.base import BaseInformer
@@ -38,11 +41,12 @@ class RawTestCase(TestCase):
         self.assertEqual(expected, str(raw))
 
     @mock.patch.object(Raw.objects, 'get_or_create')
+    @freeze_time('2012-01-14')
     def test_generate_raw_data(self, m_get_or_create):
         generate_raw_data(BaseInformer(), 'foo', 'bar')
 
         m_get_or_create.assert_called_once_with(
-            indicator='Base', value='bar', measure='foo')
+            indicator='Base', value='bar', measure='foo', date=datetime.now())
 
     @override_settings(DJANGO_INFORMER_PREVENT_SAVE_UNTIL=None)
     @mock.patch.object(Raw.objects, 'get_or_create')
@@ -60,7 +64,8 @@ class RawTestCase(TestCase):
         Prevents the generation of multiple data when the limit was not
         exceeded.
         """
-        RawFactory(indicator='Base', measure='foo', value='bar')
+        RawFactory(
+            indicator='Base', measure='foo', value='bar', date=datetime.now())
 
         generate_raw_data(BaseInformer(), 'foo', 'bar')
 
