@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""informer tests for views"""
+"""
+informer tests for views
+"""
 
 import mock
 import json
@@ -8,6 +10,9 @@ import pytest
 
 from django.test import TestCase, Client
 from django.db import connections
+
+from informer.models import Raw
+from informer.factories import RawFactory
 
 pytestmark = pytest.mark.django_db
 
@@ -28,7 +33,7 @@ class DefaultViewTest(TestCase):
         self.assertEqual(200, response.status_code)
 
 
-class InformerDiscoverViewTest(TestCase):
+class DiscoverViewTest(TestCase):
     """
     Tests responses from Informer Discover
     """
@@ -84,9 +89,10 @@ class InformerViewTest(TestCase):
         result = json.loads(response.content.decode())
 
         expected = {
-            u'message': 'Your database is operational.',
-            u'name': 'DatabaseInformer',
-            u'operational': True
+            u'message': u'Your database is operational.',
+            u'name': u'DatabaseInformer',
+            u'operational': True,
+            u'measures': [u'availability']
         }
 
         self.assertEqual(expected, result)
@@ -111,3 +117,33 @@ class InformerViewTest(TestCase):
         }
 
         self.assertEqual(expected, result)
+
+
+class MeasureViewTest(TestCase):
+    """
+    Tests to Measure View
+    """
+
+    def setUp(self):
+        self.client = Client()
+
+    def test_get(self):
+        """
+        Test if 'details' from a specific Informer has a expected data
+        """
+        RawFactory.create(indicator='Database', measure='availability')
+
+        response = self.client.get('/database/availability/')
+
+        self.assertEqual(200, response.status_code)
+
+    @mock.patch.object(Raw.objects, 'filter')
+    def test_get_fail(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = Exception('Boom')
+
+        response = self.client.get('/database/availability/')
+
+        self.assertEqual(200, response.status_code)

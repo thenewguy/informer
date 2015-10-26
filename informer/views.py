@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""informer views"""
+"""
+informer views
+"""
 
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse
@@ -10,6 +12,8 @@ from django.views.generic import View
 from django.conf import settings
 
 from informer.checker.base import BaseInformer, InformerException
+
+from informer.models import Raw
 
 
 class DefaultView(View):
@@ -30,7 +34,7 @@ class DefaultView(View):
         return render(request, self.template, data, content_type='text/html')
 
 
-class InformerDiscoverView(View):
+class DiscoverView(View):
     """
     Discover URL's from each informer registered on settings
     """
@@ -83,7 +87,35 @@ class InformerView(View):
 
             result['operational'] = operational
             result['message'] = message
+
+            measures = cls.get_measures()
+            measures = [measure.replace('check_', '') for measure in measures]
+
+            result['measures'] = measures
         except InformerException as error:
             result['message'] = '%s' % error
 
         return JsonResponse(result)
+
+
+class MeasureView(View):
+    """
+    Get result from a specific measure
+    """
+
+    def get(self, request, namespace, classname, measure):
+        """
+        GET /informer/:informer/:measure/
+        """
+        try:
+            indicator = classname.replace('Informer', '')
+            fields = ['id', 'indicator', 'measure', 'date', 'value']
+
+            data = Raw.objects.filter(
+                indicator=indicator, measure=measure).values(*fields)
+
+            result = list(data)
+        except Exception as error:
+            result = u'%s' % error
+
+        return JsonResponse(result, safe=False)

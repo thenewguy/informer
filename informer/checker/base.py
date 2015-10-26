@@ -14,9 +14,9 @@ class InformerException(Exception):
     pass
 
 
-class Collector(type):
+class Support(type):
     """
-    A helper to automate the bind of the collector of measurements.
+    A helper to automate the bind of features from Informer.
     """
 
     @staticmethod
@@ -27,18 +27,17 @@ class Collector(type):
         def helper(instance, *args, **kwargs):
             result = func(instance, *args, **kwargs)
 
-            # save default (availability)
-            post_check.send(
-                sender=instance, measure='availability', value=result[0])
+            measures = instance.__class__.get_measures()
 
-            # run others checks
-            attrs = dir(instance)
-            collectors = [attr for attr in attrs if attr.startswith('check_')]
+            for measure in measures:
 
-            for collector in collectors:
-                value = getattr(instance, collector, None)()
+                if measure == 'check_availability':
+                    value = result[0]
+                else:
+                    value = getattr(instance, measure, None)()
+
                 post_check.send(
-                    sender=instance, measure=collector, value=value)
+                    sender=instance, measure=measure, value=value)
 
             return result
 
@@ -58,14 +57,14 @@ class BaseInformer(object):
     A base class to serve as infrastructure to new 'Informers'.
     """
 
-    __metaclass__ = Collector
+    __metaclass__ = Support
 
     def __str__(self):
         return u'A small and explicit description from informer.'
 
     def check(self):
         """
-        Each informer need 'inspect' the guarded resource or service.
+        Each informer need 'inspect' the monitored resource or service.
         """
         raise NotImplementedError
 
@@ -91,3 +90,13 @@ class BaseInformer(object):
             raise InformerException('%s is not a Informer.' % classname)
 
         return cls
+
+    @classmethod
+    def get_measures(cls):
+        """
+        Get measures from Informer
+        """
+        measures = ['check_availability']  # initialized with default measure
+        measures += [attr for attr in dir(cls) if attr.startswith('check_')]
+
+        return measures
