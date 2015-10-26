@@ -3,11 +3,29 @@
         <md-icon md-font-set="material-icons">keyboard_backspace</md-icon>
     </a>
 
-    <h2 class="md-title">{{ informer.name | name }}</h2>
-    <p>{{ informer.message }}</p>
-    <small ng-switch="informer.operational">
-        <i class="material-icons" ng-switch-when="true">keyboard_arrow_up</i>
-        <i class="material-icons" ng-switch-when="false">keyboard_arrow_down</i>
-        <i class="material-icons" ng-switch-default>clear</i>
-    </small>
+    <h1 class="md-display-1">
+        {{ informer.name | name }}
+        <small ng-switch="informer.operational">
+            <i class="material-icons" ng-switch-when="true">keyboard_arrow_up</i>
+            <i class="material-icons" ng-switch-when="false">keyboard_arrow_down</i>
+            <i class="material-icons" ng-switch-default>clear</i>
+        </small>
+    </h1>
+    <p class="md-title">{{ informer.message }}</p>
+
+    <br />
+    <md-divider></md-divider>
+    <br />
+
+    <h2 class="md-title">measures</h2>
+    <p class="md-caption">values collected by the {{informer.name}}.</p>
+
+    <md-list>
+        <md-list-item class="md-2-line" ng-repeat="measure in measures">
+            <div class="md-list-item-text">
+                <h3>{{measure.measure}} <sup>{{measure.date | date: 'short'}}</sup></h3>
+                <p>{{measure.value}}</p>
+            </div>
+        </md-list-item>
+    </md-list>
 </div>

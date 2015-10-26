@@ -3,10 +3,11 @@
 
     var checker = angular.module('informer.checker');
 
-    checker.factory('InformerDiscoverService', ['$resource', 'CONFIGURATION', InformerDiscoverService]);
+    checker.factory('DiscoverService', ['$resource', 'CONFIGURATION', DiscoverService]);
     checker.factory('InformerService', ['$resource', 'CONFIGURATION', InformerService]);
+    checker.factory('MeasureService', ['$resource', 'CONFIGURATION', MeasureService]);
 
-    function InformerDiscoverService ($resource, Configuration) {
+    function DiscoverService ($resource, Configuration) {
         return $resource(
             Configuration.URL + 'discover/',
             {},
@@ -23,6 +24,13 @@
             {
                 'get': { method: 'GET' }
             }
+        );
+    }
+
+    function MeasureService ($resource, Configuration) {
+        return $resource(
+            Configuration.URL + ':informer/:measure',
+            {'informer': '@informer', 'measure': '@measure'}
         );
     }
 

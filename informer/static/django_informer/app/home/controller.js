@@ -3,7 +3,7 @@
 
     var home = angular.module('informer.home', ['ngResource']);
 
-    home.controller('DashboardController', ['$scope', 'InformerDiscoverService', 'InformerService', DashboardController]);
+    home.controller('DashboardController', ['$scope', 'DiscoverService', 'InformerService', DashboardController]);
 
     function DashboardController ($scope, Discover, Informer) {
         $scope.informers = [];
