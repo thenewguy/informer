@@ -18,7 +18,7 @@ from django.conf.urls import include, url
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    url(r'^$', RedirectView.as_view(url=reverse_lazy('default-informer'))),
+    url(r'^$', RedirectView.as_view(url=reverse_lazy('default-informer'), permanent=True)),
     url(r'^informer/', include('informer.urls')),
 ]
 

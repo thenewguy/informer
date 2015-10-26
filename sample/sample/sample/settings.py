@@ -108,3 +108,5 @@ DJANGO_INFORMERS = (
     ('informer.checker.celery', 'CeleryInformer'),
     ('informer.checker.cache', 'CacheInformer'),
 )
+
+DJANGO_INFORMER_PREVENT_SAVE_UNTIL = 1
