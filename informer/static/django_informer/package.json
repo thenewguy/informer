@@ -19,7 +19,7 @@
     "angular-resource": "^1.4.7",
     "angular-messages": "^1.4.7",
     "angular-route": "^1.4.1",
-    "angular-material": "^0.11.2"
+    "angular-material": "^0.11.4"
   },
   "devDependencies": {
     "jasmine-core": "^2.3.4",
