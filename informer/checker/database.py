@@ -4,9 +4,13 @@
 django informer checker for Database
 """
 
-from django.db import connections
+from django.db import (
+    Error, InterfaceError, DatabaseError, DataError, OperationalError,
+    IntegrityError, InternalError, ProgrammingError, NotSupportedError
+)
 
 from informer.checker.base import BaseInformer, InformerException
+from informer.models import Raw
 
 
 class DatabaseInformer(BaseInformer):
@@ -22,8 +26,11 @@ class DatabaseInformer(BaseInformer):
         Inspect default database configuration.
         """
         try:
-            conn = connections['default']
-            conn.introspection.table_names()
+            Raw.objects.count()
+        except (Error, InterfaceError, DatabaseError, DataError,
+                OperationalError, IntegrityError, InternalError,
+                ProgrammingError, NotSupportedError):
+            return False, 'Oh no. Your database is out!'
         except Exception as error:
             raise InformerException(
                 'An error occured when trying access database: %s' % error)

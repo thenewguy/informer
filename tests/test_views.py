@@ -9,7 +9,6 @@ import json
 import pytest
 
 from django.test import TestCase, Client
-from django.db import connections
 
 from informer.models import Raw
 from informer.factories import RawFactory
@@ -97,7 +96,7 @@ class InformerViewTest(TestCase):
 
         self.assertEqual(expected, result)
 
-    @mock.patch.object(connections['default'].introspection, 'table_names')
+    @mock.patch.object(Raw.objects, 'count')
     def test_check_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad

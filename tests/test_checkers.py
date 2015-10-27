@@ -9,13 +9,15 @@ import pytest
 
 from django.test import TestCase
 from django.core.cache import cache
-from django.db import connections
+from django.db import DatabaseError
 
 from informer.checker.base import BaseInformer, InformerException
 from informer.checker.database import DatabaseInformer
 from informer.checker.storage import StorageInformer
 from informer.checker.celery import CeleryInformer
 from informer.checker.cache import CacheInformer
+
+from informer.models import Raw
 
 
 pytestmark = pytest.mark.django_db
@@ -122,7 +124,7 @@ class DatabaseInformerTest(TestCase):
 
         self.assertEqual(expected, informer.check())
 
-    @mock.patch.object(connections['default'].introspection, 'table_names')
+    @mock.patch.object(Raw.objects, 'count')
     def test_check_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
@@ -132,6 +134,19 @@ class DatabaseInformerTest(TestCase):
         m_mock.side_effect = Exception('Boom')
 
         self.assertRaises(InformerException, informer.check)
+
+    @mock.patch.object(Raw.objects, 'count')
+    def test_check_fails_when_database_is_broken(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        informer = DatabaseInformer()
+
+        m_mock.side_effect = DatabaseError('Boom')
+
+        expected = (False, 'Oh no. Your database is out!')
+
+        self.assertEqual(expected, informer.check())
 
 
 class StorageInformerTest(TestCase):
