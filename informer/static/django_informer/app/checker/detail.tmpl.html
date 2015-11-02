@@ -23,7 +23,7 @@
     <md-list>
         <md-list-item class="md-2-line" ng-repeat="measure in measures">
             <div class="md-list-item-text">
-                <h3>{{measure.measure}} <sup>{{measure.date | date: 'short'}}</sup></h3>
+                <h3>{{measure.measure}} <sup>{{measure.date | date: 'medium'}}</sup></h3>
                 <p>{{measure.value}}</p>
             </div>
         </md-list-item>
