@@ -42,8 +42,6 @@ class CheckInformerTest(TestCase):
 
         result = out.getvalue()
 
-        print result
-
         for item in expected:
             self.assertTrue(item in result)
 

@@ -89,7 +89,7 @@ class BaseInformerTest(TestCase):
             InformerException,
             BaseInformer.get_class, 'tests.test_checkers', 'BarInformer')
 
-    @mock.patch('__builtin__.__import__')
+    @mock.patch('informer.checker.base.import_module')
     def test_get_class_failure(self, m_import):
         """
         Test if exception handling works when a generic error occurs
@@ -98,7 +98,7 @@ class BaseInformerTest(TestCase):
 
         self.assertRaises(
             Exception,
-            BaseInformer.get_class, 'tests.test_checker.', 'BarInformer')
+            BaseInformer.get_class, 'tests.test_checkers', 'BarInformer')
 
 
 class DatabaseInformerTest(TestCase):

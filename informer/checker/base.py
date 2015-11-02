@@ -4,6 +4,8 @@
 django informer checker base
 """
 
+from importlib import import_module
+
 from informer.models import post_check
 
 
@@ -74,7 +76,7 @@ class BaseInformer(object):
         Dynamic import from Informer
         """
         try:
-            module = __import__(namespace, globals(), locals(), [classname])
+            module = import_module(namespace)
             cls = getattr(module, classname)
         except ImportError:
             raise InformerException(
