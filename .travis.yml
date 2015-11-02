@@ -2,10 +2,11 @@ language: python
 
 python:
   - "2.7"
+  - "3.5"
 
 # install dependencies
 install:
-  - "pip install -r containers/application/requirements.txt"
+  - "pip install -r containers/application/python3/requirements.txt"
 
 # run tests
 script:

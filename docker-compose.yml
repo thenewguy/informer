@@ -1,10 +1,19 @@
 application:
-    build: containers/application
+    build: containers/application/python3/
     working_dir: /usr/src/app
     volumes:
         - ./:/usr/src/app
     ports:
         - "8000:8000"
+
+legacy:
+    build: containers/application/python2
+    working_dir: /usr/src/app
+    volumes:
+        - ./:/usr/src/app
+    ports:
+        - "8000:8000"
+
 
 sample:
     build: containers/sample
