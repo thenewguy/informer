@@ -16,57 +16,29 @@ class InformerException(Exception):
     pass
 
 
-class Support(type):
-    """
-    A helper to automate the bind of features from Informer.
-    """
-
-    @staticmethod
-    def trigger(func):
-        """
-        Trigger fired after checking by the signal.
-        """
-        def helper(instance, *args, **kwargs):
-            result = func(instance, *args, **kwargs)
-
-            measures = instance.__class__.get_measures()
-
-            for measure in measures:
-
-                if measure == 'check_availability':
-                    value = result[0]
-                else:
-                    value = getattr(instance, measure, None)()
-
-                post_check.send(
-                    sender=instance, measure=measure, value=value)
-
-            return result
-
-        return helper
-
-    def __new__(cls, clsname, superclasses, attributedict):
-        """
-        On instantiation, the trigger is added.
-        """
-        attributedict['check'] = cls.trigger(attributedict['check'])
-
-        return type.__new__(cls, clsname, superclasses, attributedict)
-
-
 class BaseInformer(object):
     """
-    A base class to serve as infrastructure to new 'Informers'.
+    A (base) class to serve as infrastructure to new 'Informers'.
     """
-
-    __metaclass__ = Support
 
     def __str__(self):
         return u'A small and explicit description from informer.'
 
-    def check(self):
+    def __new__(cls, *args, **kwargs):
         """
-        Each informer need 'inspect' the monitored resource or service.
+        On instantiation, the trigger is added.
+        """
+        measures = cls.get_measures()
+
+        for measure in measures:
+            func = getattr(cls, measure)
+            setattr(cls, measure, trigger(func))
+
+        return super(BaseInformer, cls).__new__(cls)
+
+    def check_availability(self):
+        """
+        Each informer need check the availability from resource or service.
         """
         raise NotImplementedError
 
@@ -96,9 +68,28 @@ class BaseInformer(object):
     @classmethod
     def get_measures(cls):
         """
-        Get measures from Informer
+        Get measures
         """
-        measures = ['check_availability']  # initialized with default measure
-        measures += [attr for attr in dir(cls) if attr.startswith('check_')]
+        measures = []
+
+        for attr in dir(cls):
+            if not attr.startswith('check_'):
+                continue
+
+            if attr not in measures:
+                measures.append(attr)
 
         return measures
+
+
+def trigger(func):
+    def save(cls, *args, **kwargs):
+        sender = cls
+        measure = func.__name__
+        value = func(cls)
+
+        post_check.send(sender=sender, measure=measure, value=value[0])
+
+        return value
+
+    return save

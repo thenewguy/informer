@@ -43,12 +43,13 @@ class BaseInformerTest(TestCase):
         expected = u'A small and explicit description from informer.'
         self.assertEqual(expected, str(informer))
 
-    def test_check(self):
+    def test_check_availability(self):
         """
         Test if 'check' raises a NotImplementedError
         """
         informer = BaseInformer()
-        self.assertRaises(NotImplementedError, informer.check)
+
+        self.assertRaises(NotImplementedError, informer.check_availability)
 
     def test_get_class(self):
         """
@@ -114,7 +115,7 @@ class DatabaseInformerTest(TestCase):
         expected = u'Check if Database is operational.'
         self.assertEqual(expected, str(informer))
 
-    def test_check(self):
+    def test_check_availability(self):
         """
         Test if with 'ideal scenario', all goes fine
         """
@@ -122,7 +123,7 @@ class DatabaseInformerTest(TestCase):
 
         expected = (True, 'Your database is operational.')
 
-        self.assertEqual(expected, informer.check())
+        self.assertEqual(expected, informer.check_availability())
 
     @mock.patch.object(Raw.objects, 'count')
     def test_check_fails(self, m_mock):
@@ -133,7 +134,7 @@ class DatabaseInformerTest(TestCase):
 
         m_mock.side_effect = Exception('Boom')
 
-        self.assertRaises(InformerException, informer.check)
+        self.assertRaises(InformerException, informer.check_availability)
 
     @mock.patch.object(Raw.objects, 'count')
     def test_check_fails_when_database_is_broken(self, m_mock):
@@ -146,7 +147,7 @@ class DatabaseInformerTest(TestCase):
 
         expected = (False, 'Oh no. Your database is out!')
 
-        self.assertEqual(expected, informer.check())
+        self.assertEqual(expected, informer.check_availability())
 
 
 class StorageInformerTest(TestCase):
@@ -170,7 +171,7 @@ class StorageInformerTest(TestCase):
 
         expected = (True, 'Your FileSystemStorage is operational.')
 
-        self.assertEqual(expected, informer.check())
+        self.assertEqual(expected, informer.check_availability())
 
     @mock.patch('django.core.files.storage.Storage.save')
     def test_check_fails(self, m_mock):
@@ -181,7 +182,7 @@ class StorageInformerTest(TestCase):
 
         informer = StorageInformer()
 
-        self.assertRaises(InformerException, informer.check)
+        self.assertRaises(InformerException, informer.check_availability)
 
 
 class CeleryInformerTest(TestCase):
@@ -198,7 +199,7 @@ class CeleryInformerTest(TestCase):
         self.assertEqual(expected, str(informer))
 
     @mock.patch('celery.app.control.Control.inspect')
-    def test_check(self, mock):
+    def test_check_availability(self, mock):
         """
         Test if with 'ideal scenario', all goes fine
         """
@@ -207,7 +208,7 @@ class CeleryInformerTest(TestCase):
 
         expected = (True, 'Celery is operational.')
 
-        self.assertEqual(expected, informer.check())
+        self.assertEqual(expected, informer.check_availability())
 
     @mock.patch('celery.app.control.Control.inspect')
     def test_check_task_fail(self, mock):
@@ -220,7 +221,7 @@ class CeleryInformerTest(TestCase):
 
         expected = (False, 'No running Celery workers were found.')
 
-        self.assertEqual(expected, informer.check())
+        self.assertEqual(expected, informer.check_availability())
 
     @mock.patch('celery.app.control.Control.inspect')
     def test_check_exceptions(self, mock):
@@ -234,15 +235,15 @@ class CeleryInformerTest(TestCase):
 
         with self.assertRaises(InformerException):
             mock.side_effect = IOError('Boom')
-            informer.check()
+            informer.check_availability()
 
         with self.assertRaises(InformerException):
             mock.side_effect = ImportError('Boom')
-            informer.check()
+            informer.check_availability()
 
         with self.assertRaises(InformerException):
             mock.side_effect = Exception('Boom')
-            informer.check()
+            informer.check_availability()
 
 
 class CacheInformerTest(TestCase):
@@ -266,7 +267,7 @@ class CacheInformerTest(TestCase):
 
         expected = (True, 'Your cache system is operational.')
 
-        self.assertEqual(expected, informer.check())
+        self.assertEqual(expected, informer.check_availability())
 
     @mock.patch.object(cache, 'get')
     def test_check_fails(self, m_mock):
@@ -277,4 +278,4 @@ class CacheInformerTest(TestCase):
 
         m_mock.side_effect = Exception('Boom')
 
-        self.assertRaises(InformerException, informer.check)
+        self.assertRaises(InformerException, informer.check_availability)
