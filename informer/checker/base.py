@@ -70,16 +70,7 @@ class BaseInformer(object):
         """
         Get measures
         """
-        measures = []
-
-        for attr in dir(cls):
-            if not attr.startswith('check_'):
-                continue
-
-            if attr not in measures:
-                measures.append(attr)
-
-        return measures
+        return [attr for attr in dir(cls) if attr.startswith('check_')]
 
 
 def trigger(func):
