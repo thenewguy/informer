@@ -16,7 +16,7 @@ class StorageInformer(BaseInformer):
     def __str__(self):
         return u'Check if Storage is operational.'
 
-    def check(self):
+    def check_availability(self):
         """
         Perform check against Default Storage.
         """

@@ -97,7 +97,7 @@ class InformerViewTest(TestCase):
         self.assertEqual(expected, result)
 
     @mock.patch.object(Raw.objects, 'count')
-    def test_check_fails(self, m_mock):
+    def test_get_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
         """

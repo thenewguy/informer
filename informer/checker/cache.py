@@ -17,7 +17,7 @@ class CacheInformer(BaseInformer):
     def __str__(self):
         return u'Check if Cache is operational.'
 
-    def check(self):
+    def check_availability(self):
         """
         Perform check against default cache configuration
         """

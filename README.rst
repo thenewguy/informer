@@ -56,7 +56,7 @@ Set informers on settings
     )
 
 
-Set minimum interval (in minutes) between the saved results
+Set interval (in minutes) between the saved results
 -----------------
 
 ::

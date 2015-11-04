@@ -17,7 +17,7 @@ class CeleryInformer(BaseInformer):
     def __str__(self):
         return u'Check if Celery is operational.'
 
-    def check(self):
+    def check_availability(self):
         """
         Perform check against default Celery configuration
         """

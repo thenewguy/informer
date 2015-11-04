@@ -45,8 +45,8 @@ class Command(BaseCommand):
         self.stdout.write('-' * 79)
         self.stdout.write(' Get informations from each Informer.\n\n')
         self.stdout.write(
-            ' For a complete help and documentation, visit '
-            'http://github.com/rodrigobraga/informer.')
+            ' For a complete help and documentation, visit'
+            ' http://github.com/rodrigobraga/informer.')
 
         DJANGO_INFORMERS = getattr(settings, 'DJANGO_INFORMERS', ())
 
@@ -81,7 +81,7 @@ class Command(BaseCommand):
                 cls = BaseInformer.get_class(namespace, classname)
                 informer = cls()
 
-                operational, message = informer.check()
+                operational, message = informer.check_availability()
             except InformerException as error:
                 self.stderr.write(output.format(classname, error))
             except Exception as error:

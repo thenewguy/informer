@@ -83,7 +83,7 @@ class InformerView(View):
 
             informer = cls()
 
-            operational, message = informer.check()
+            operational, message = informer.check_availability()
 
             result['operational'] = operational
             result['message'] = message

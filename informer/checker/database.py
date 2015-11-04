@@ -21,7 +21,7 @@ class DatabaseInformer(BaseInformer):
     def __str__(self):
         return u'Check if Database is operational.'
 
-    def check(self):
+    def check_availability(self):
         """
         Inspect default database configuration.
         """
