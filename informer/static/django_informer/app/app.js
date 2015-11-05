@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    google.load('visualization', '1.0', {
+        'packages': ['corechart', 'timeline']
+    });
+
     var app = angular.module('informer', [
         'ngRoute',
         'ngResource',
