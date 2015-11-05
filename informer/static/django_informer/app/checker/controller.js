@@ -7,7 +7,7 @@
 
     function DetailController ($scope, params, Informer, Measure) {
         $scope.informer = {};
-        $scope.measures = [];
+        $scope.availability = 0;
 
         Informer.get({ 'informer': params.informer }, successOnGetInformerDetails, fail);
 
@@ -19,9 +19,15 @@
             }, null);
 
             function successOnGetMeasureDetails (response) {
+                var online = 0;
+
                 angular.forEach(response, function (raw) {
-                    this.push(raw);
-                }, $scope.measures);
+                    if (raw.value) {
+                        online += 1;
+                    }
+
+                    $scope.availability = (100 * online) / response.length;
+                }, online);
             }
 
         }
