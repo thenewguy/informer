@@ -17,5 +17,8 @@
     <md-divider></md-divider>
     <br />
 
-    <p class="md-display-1">availability <sup>{{availability}}%</sup></p>
+    <span class="md-title">Measures</span>
+    <span class="md-subhead">data collected from {{informer.name | lowercase}}.</span>
+
+    <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
 </div>

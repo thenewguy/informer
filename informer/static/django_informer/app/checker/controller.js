@@ -14,27 +14,23 @@
         function successOnGetInformerDetails (response) {
             $scope.informer = response;
 
-            angular.forEach(response.measures, function (value, key) {
-                Measure.query({ 'informer': params.informer, 'measure': value }, successOnGetMeasureDetails, fail);
-            }, null);
-
-            function successOnGetMeasureDetails (response) {
-                var online = 0;
-
-                angular.forEach(response, function (raw) {
-                    if (raw.value) {
-                        online += 1;
-                    }
-
-                    $scope.availability = (100 * online) / response.length;
-                }, online);
-            }
-
+            Measure.query({'informer': params.informer, 'measure': 'availability' }, calculateAvailability, fail);
         }
 
         function fail () {
             $scope.informer = {};
             $scope.message = 'Crap. A error ocurred.';
+        }
+
+        function calculateAvailability (data) {
+            var online = 0;
+
+            angular.forEach(data, function (raw) {
+                var up = JSON.parse(raw.value.toLowerCase());
+                if (up) online += 1;
+
+                $scope.availability = (100 * online) / data.length;
+            }, online);
         }
     }
 })();
