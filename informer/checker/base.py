@@ -79,6 +79,9 @@ def trigger(func):
         measure = func.__name__
         value = func(cls)
 
+        if measure not in cls.get_measures():
+            return value
+
         post_check.send(sender=sender, measure=measure, value=value[0])
 
         return value
