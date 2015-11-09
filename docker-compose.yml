@@ -14,7 +14,6 @@ legacy:
     ports:
         - "8000:8000"
 
-
 sample:
     build: containers/sample
     working_dir: /usr/src/app
@@ -24,9 +23,14 @@ sample:
         - ./informer/:/usr/src/app/informer
     ports:
         - "8000:8000"
+    links:
+        - postgres
 
 interface:
     build: containers/interface
     working_dir: /usr/src/app
     volumes:
         - ./informer/static/django_informer/:/usr/src/app
+
+postgres:
+    image: postgres:9.4.5

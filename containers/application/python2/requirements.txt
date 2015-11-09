@@ -1,5 +1,7 @@
 # minimum Django
-Django==1.8.5
+Django==1.8.6
+
+psycopg2==2.6.1
 
 # tools and utilities
 celery==3.1.18
