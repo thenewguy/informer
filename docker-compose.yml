@@ -5,6 +5,8 @@ application:
         - ./:/usr/src/app
     ports:
         - "8000:8000"
+    links:
+        - postgres
 
 legacy:
     build: containers/application/python2

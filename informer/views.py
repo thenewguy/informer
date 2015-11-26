@@ -64,7 +64,7 @@ class DiscoverView(View):
 
 class InformerView(View):
     """
-    Get result from a specific Informer
+    Get results from a specific Informer
     """
 
     def get(self, request, namespace, classname):
@@ -75,6 +75,7 @@ class InformerView(View):
         result = {
             'name': classname,
             'operational': None,
+            'measures': [],
             'message': 'pending'
         }
 
@@ -83,14 +84,13 @@ class InformerView(View):
 
             informer = cls()
 
+            measures = cls.get_measures()
+            measures = [measure.replace('check_', '') for measure in measures]
+
             operational, message = informer.check_availability()
 
             result['operational'] = operational
             result['message'] = message
-
-            measures = cls.get_measures()
-            measures = [measure.replace('check_', '') for measure in measures]
-
             result['measures'] = measures
         except InformerException as error:
             result['message'] = '%s' % error

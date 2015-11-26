@@ -112,6 +112,7 @@ class InformerViewTest(TestCase):
         expected = {
             u'operational': None,
             u'name': 'DatabaseInformer',
+            u'measures': [],
             u'message': 'An error occured when trying access database: Boom'
         }
 
