@@ -4,11 +4,12 @@
 informer models
 """
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
 from django.dispatch import Signal
+from django.utils import timezone
 
 
 class Raw(models.Model):
@@ -42,7 +43,7 @@ def generate_raw_data(sender, measure, value, *args, **kwargs):
     if not interval:
         return
 
-    reference = datetime.now()
+    reference = timezone.now()
     limit = reference - timedelta(minutes=interval)
 
     indicator = sender.__class__.__name__.replace('Informer', '')
