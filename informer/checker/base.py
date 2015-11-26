@@ -4,9 +4,14 @@
 django informer checker base
 """
 
+import logging
 from importlib import import_module
 
 from informer.models import post_check
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('Django Infomer')
 
 
 class InformerException(Exception):
@@ -26,13 +31,17 @@ class BaseInformer(object):
 
     def __new__(cls, *args, **kwargs):
         """
-        On instantiation, the trigger is added.
+        On instantiation, the trigger's is added.
         """
         measures = cls.get_measures()
 
         for measure in measures:
             func = getattr(cls, measure)
-            setattr(cls, measure, trigger(func))
+            setattr(cls, measure, save(func))
+
+        # Bind 'run all' on default check.
+        func = getattr(cls, 'check_availability')
+        setattr(cls, 'check_availability', run(func))
 
         return super(BaseInformer, cls).__new__(cls)
 
@@ -73,17 +82,42 @@ class BaseInformer(object):
         return [attr for attr in dir(cls) if attr.startswith('check_')]
 
 
-def trigger(func):
-    def save(cls, *args, **kwargs):
-        sender = cls
+def save(func):
+    """
+    When a verification is done, the signal to save data is sent.
+    """
+    def trigger(cls, *args, **kwargs):
         measure = func.__name__
-        value = func(cls)
+        values = func(cls)
 
         if measure not in cls.get_measures():
             return value
 
-        post_check.send(sender=sender, measure=measure, value=value[0])
+        post_check.send(sender=cls, measure=measure, value=values[0])
 
-        return value
+        message = ' %s (%s) was collected with values %s'
+        message %= (measure, cls.__class__.__name__, values)
 
-    return save
+        logger.info(message)
+
+        return values
+
+    return trigger
+
+
+def run(func):
+    """
+    When 'check availability' is called, all others run on cascade.
+    """
+    def trigger(cls, *args, **kwargs):
+        values = func(cls)
+
+        measures = cls.get_measures()
+        measures.remove('check_availability') # Remove to avoid double run.
+
+        for measure in measures:
+            getattr(cls, measure)()
+
+        return values
+
+    return trigger
