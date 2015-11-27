@@ -29,19 +29,10 @@ def pytest_configure():
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
             'django.middleware.security.SecurityMiddleware',
         ),
-        #DATABASES = {
-        #    'default': {
-        #        'ENGINE': 'django.db.backends.sqlite3',
-        #        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        #    }
-        #},
         DATABASES = {
             'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'postgres',
-                'USER': 'postgres',
-                'HOST': 'postgres',
-                'PORT': '5432',
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
             }
         },
         CACHES = {

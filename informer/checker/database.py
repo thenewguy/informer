@@ -60,10 +60,8 @@ class PostgresqlInformer(DatabaseInformer):
                 FROM pg_statio_user_sequences) sequences
             """
 
-        cursor = connection.cursor()
-        cursor.execute(query)
-        row = cursor.fetchone()
-
-        print (" ------ ", row)
+        #cursor = connection.cursor()
+        #cursor.execute(query)
+        #row = cursor.fetchone()
 
         return result, 'Check buffer: %s ' % result

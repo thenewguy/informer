@@ -91,7 +91,7 @@ def save(func):
         values = func(cls)
 
         if measure not in cls.get_measures():
-            return value
+            return values
 
         post_check.send(sender=cls, measure=measure, value=values[0])
 
