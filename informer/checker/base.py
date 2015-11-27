@@ -95,7 +95,7 @@ def save(func):
 
         post_check.send(sender=cls, measure=measure, value=values[0])
 
-        message = ' %s (%s) was collected with values %s'
+        message = ' %s (%s) collected values %s'
         message %= (measure, cls.__class__.__name__, values)
 
         logger.info(message)

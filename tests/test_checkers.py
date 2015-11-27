@@ -12,7 +12,7 @@ from django.core.cache import cache
 from django.db import DatabaseError
 
 from informer.checker.base import BaseInformer, InformerException
-from informer.checker.database import DatabaseInformer, PostgresqlInformer
+from informer.checker.database import DatabaseInformer, PostgresInformer
 from informer.checker.storage import StorageInformer
 from informer.checker.celery import CeleryInformer
 from informer.checker.cache import CacheInformer
@@ -150,21 +150,19 @@ class DatabaseInformerTest(TestCase):
         self.assertEqual(expected, informer.check_availability())
 
 
-class PostgresqlInformerTest(TestCase):
+class PostgresInformerTest(TestCase):
     """
-    Tests to PostgreSQL Informer
+    Tests to PostgreSQL Informer.
     """
     def test_check_availability(self):
         """
         Test if with 'ideal scenario', all goes fine
         """
-        informer = PostgresqlInformer()
+        informer = PostgresInformer()
 
         expected = (True, 'Your database is operational.')
 
         self.assertEqual(expected, informer.check_availability())
-
-        print(Raw.objects.all())
 
 
 class StorageInformerTest(TestCase):
