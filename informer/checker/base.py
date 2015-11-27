@@ -113,7 +113,7 @@ def run(func):
         values = func(cls)
 
         measures = cls.get_measures()
-        measures.remove('check_availability') # Remove to avoid double run.
+        measures.remove('check_availability')  # Remove to avoid double run.
 
         for measure in measures:
             getattr(cls, measure)()
