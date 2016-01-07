@@ -8,13 +8,34 @@
     function DetailController ($scope, params, Informer, Measure) {
         $scope.informer = {};
         $scope.availability = 0;
+        $scope.measures = [];
 
-        Informer.get({ 'informer': params.informer }, successOnGetInformerDetails, fail);
+        Informer.get({'informer': params.informer}, successOnGetDetails, fail);
 
-        function successOnGetInformerDetails (response) {
+        function successOnGetDetails (response) {
             $scope.informer = response;
+            $scope.informer.measures.map(getMeasureValues);
+        }
 
-            Measure.query({'informer': params.informer, 'measure': 'availability' }, calculateAvailability, fail);
+        function getMeasureValues (measure) {
+            Measure.query({
+                'informer': params.informer,
+                'measure': measure
+            }, function (response) {
+
+                if (measure === 'availability') {
+                    calculateAvailability(response);
+                } else {
+                    var data = {
+                        'measure': measure,
+                        'result': response
+                    }
+
+                    $scope.measures.push(data);
+
+                }
+
+            }, fail);
         }
 
         function fail () {

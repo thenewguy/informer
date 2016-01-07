@@ -21,4 +21,8 @@
     <span class="md-subhead">data collected from {{informer.name | lowercase}}.</span>
 
     <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
+
+    <div ng-repeat="measure in measures">
+        <div informer-chart></div>
+    </div>
 </div>

@@ -15,5 +15,11 @@ script:
     - py.test tests --cov informer
     # - python setup.py sdist bdist_wheel
 
+addons:
+  postgresql: "9.4"
+
+services:
+  - postgresql
+
 # after_success:
 #    - coveralls

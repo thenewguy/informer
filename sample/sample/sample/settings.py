@@ -114,7 +114,7 @@ STATIC_URL = '/static/'
 
 DJANGO_INFORMERS = (
     ('informer.checker.database', 'DatabaseInformer'),
-    ('informer.checker.database', 'PostgresqlInformer'),
+    ('informer.checker.database', 'PostgresInformer'),
     ('informer.checker.storage', 'StorageInformer'),
     ('informer.checker.celery', 'CeleryInformer'),
     ('informer.checker.cache', 'CacheInformer'),

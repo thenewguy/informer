@@ -9,7 +9,8 @@ import pytest
 
 from django.test import TestCase
 from django.core.cache import cache
-from django.db import DatabaseError
+
+from freezegun import freeze_time
 
 from informer.checker.base import BaseInformer, InformerException
 from informer.checker.database import DatabaseInformer, PostgresInformer
@@ -136,33 +137,33 @@ class DatabaseInformerTest(TestCase):
 
         self.assertRaises(InformerException, informer.check_availability)
 
-    @mock.patch.object(Raw.objects, 'count')
-    def test_check_fails_when_database_is_broken(self, m_mock):
-        """
-        Test if with 'broken scenario', all goes bad
-        """
-        informer = DatabaseInformer()
-
-        m_mock.side_effect = DatabaseError('Boom')
-
-        expected = (False, 'Oh no. Your database is out!')
-
-        self.assertEqual(expected, informer.check_availability())
-
 
 class PostgresInformerTest(TestCase):
     """
     Tests to PostgreSQL Informer.
     """
-    def test_check_availability(self):
+    def setUp(self):
+        self.informer = PostgresInformer()
+
+    @freeze_time('2012-01-14 12:07:21')
+    def test_size(self):
         """
         Test if with 'ideal scenario', all goes fine
         """
-        informer = PostgresInformer()
+        expected = (7352084, 'database size on 2012-01-14 12:07:21')
+        result = self.informer.check_size()
+        self.assertEqual(expected, result)
 
-        expected = (True, 'Your database is operational.')
+    @mock.patch.object(Raw.objects, 'count')
+    def test_check_size_fails(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        informer = DatabaseInformer()
 
-        self.assertEqual(expected, informer.check_availability())
+        m_mock.side_effect = Exception('Boom')
+
+        self.assertRaises(InformerException, informer.check_availability)
 
 
 class StorageInformerTest(TestCase):
