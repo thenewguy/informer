@@ -1,1 +1,1 @@
-FROM node:4.1.1-onbuild
+FROM node:5.4-onbuild
