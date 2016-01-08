@@ -4,16 +4,22 @@ python:
   - "2.7"
   - "3.5"
 
-# install dependencies
 install:
   - "pip install -r containers/application/python3/requirements.txt"
 
-# run tests
 script:
     - py.test tests
     - py.test tests informer --flake
     - py.test tests --cov informer
     # - python setup.py sdist bdist_wheel
+
+branches:
+    only:
+        - master
+        - stable
+    except:
+        - legacy
+        - experimental
 
 after_success:
     - coveralls
