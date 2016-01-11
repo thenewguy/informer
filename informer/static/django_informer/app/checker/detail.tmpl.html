@@ -23,6 +23,9 @@
     <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
 
     <div ng-repeat="measure in measures">
-        <div informer-chart></div>
+        <hr />
+        <div informer-chart
+             data-name="{{measure.measure}}"
+             data-collect="{{measure.result}}"></div>
     </div>
 </div>
