@@ -8,6 +8,7 @@ import mock
 import pytest
 
 from django.test import TestCase
+from django.db import DatabaseError
 from django.core.cache import cache
 
 from freezegun import freeze_time
@@ -137,6 +138,21 @@ class DatabaseInformerTest(TestCase):
 
         self.assertRaises(InformerException, informer.check_availability)
 
+    @mock.patch.object(Raw.objects, 'count')
+    def test_check_size_with_database_error(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = DatabaseError('Boom')
+
+        informer = DatabaseInformer()
+
+        expected = (False, 'Oh no. Your database is out!')
+
+        result = informer.check_availability()
+
+        self.assertTupleEqual(expected, result)
+
 
 class PostgresInformerTest(TestCase):
     """
@@ -145,25 +161,42 @@ class PostgresInformerTest(TestCase):
     def setUp(self):
         self.informer = PostgresInformer()
 
+    def test_execute_query(self):
+        query = self.informer.query_database_stats('postgres')
+
+        self.assertNumQueries(1, lambda: self.informer._execute_query(query))
+
     @freeze_time('2012-01-14 12:07:21')
     def test_size(self):
         """
         Test if with 'ideal scenario', all goes fine
         """
-        expected = (7352084, 'database size on 2012-01-14 12:07:21')
-        result = self.informer.check_size()
-        self.assertEqual(expected, result)
+        value, message = self.informer.check_size()
 
-    @mock.patch.object(Raw.objects, 'count')
+        self.assertTrue(value > 0)
+        self.assertEqual('database size on 2012-01-14 12:07:21', message)
+
+    @mock.patch.object(PostgresInformer, '_execute_query')
     def test_check_size_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
         """
-        informer = DatabaseInformer()
-
         m_mock.side_effect = Exception('Boom')
 
-        self.assertRaises(InformerException, informer.check_availability)
+        self.assertRaises(InformerException, self.informer.check_size)
+
+    @mock.patch.object(PostgresInformer, '_execute_query')
+    def test_check_size_with_database_error(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = DatabaseError('Boom')
+
+        expected = (0, 'We can not get the database size (Boom).')
+
+        result = self.informer.check_size()
+
+        self.assertTupleEqual(expected, result)
 
 
 class StorageInformerTest(TestCase):

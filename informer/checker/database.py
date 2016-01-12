@@ -54,15 +54,24 @@ class PostgresInformer(DatabaseInformer):
     https://gist.github.com/robertsosinski/6345564
     """
 
+    def _execute_query(self, query):
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query)
+        except Exception as e:
+            raise e
+        else:
+            return cursor.fetchone()
+        finally:
+            cursor.close()
+
     def check_size(self):
         database = settings.DATABASES.get('default')
         name = database.get('NAME')
         query = self.query_database_stats(name)
 
-        cursor = connection.cursor()
-
         try:
-            cursor.execute(query)
+            db, size, commit, rollback, read, hit = self._execute_query(query)
         except (Error, InterfaceError, DatabaseError, DataError,
                 OperationalError, IntegrityError, InternalError,
                 ProgrammingError, NotSupportedError) as db_error:
@@ -71,8 +80,6 @@ class PostgresInformer(DatabaseInformer):
             raise InformerException(
                 'An error occured when trying access database: %s' % error)
         else:
-            db, size, commit, rollback, read, hit = cursor.fetchone()
-
             return size, 'database size on %s' % datetime.now()
 
     def query_database_stats(self, database):
