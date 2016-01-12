@@ -5,17 +5,17 @@ informer URL configuration
 """
 
 from django.conf import settings
-from django.conf.urls import url, patterns
+from django.conf.urls import url
 
 from informer.checker.base import BaseInformer
 
 from informer.views import DefaultView, DiscoverView, InformerView, MeasureView
 
-urlpatterns = patterns(
-    '',
+
+urlpatterns = [
     url(r'^$', DefaultView.as_view(), name='default-informer'),
     url(r'^discover/$', DiscoverView.as_view(), name='discover-informer'),
-)
+]
 
 DJANGO_INFORMERS = getattr(settings, 'DJANGO_INFORMERS', ())
 
