@@ -13,9 +13,7 @@
     </h1>
     <p class="md-title">{{ informer.message }}</p>
 
-    <br />
     <md-divider></md-divider>
-    <br />
 
     <span class="md-title">Measures</span>
     <span class="md-subhead">data collected from {{informer.name | lowercase}}.</span>
@@ -23,9 +21,11 @@
     <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
 
     <div ng-repeat="measure in measures">
-        <hr />
-        <div informer-chart
+        <md-divider></md-divider><br />
+
+        <div informer-postgres-size-chart
              data-name="{{measure.measure}}"
-             data-collect="{{measure.result}}"></div>
+             data-size="{{measure.result}}">
+        </div>
     </div>
 </div>

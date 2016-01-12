@@ -3,39 +3,43 @@
 
     var checker = angular.module('informer.checker');
 
-    checker.directive('informerChart', ['MeasureService', function (Measure) {
+    checker.directive('informerPostgresSizeChart', ['MeasureService', 'CONFIGURATION', function (Measure, Configuration) {
         return {
             restrict: 'A',
-            templateUrl: '/static/django_informer/app/checker/chart.tmpl.html',
+            template: '',
             scope: {
                 name: '@',
-                collect: '@'
+                size: '@'
             },
             link: function (scope, element, attrs) {
-                var container = element[0],
-                    result = JSON.parse(scope.collect);
-
-                google.charts.load('current', {'packages':['corechart']});
+                google.charts.load('current', {'packages':['line']});
                 google.charts.setOnLoadCallback(drawChart);
 
+                var component = element[0],
+                    options = {
+                        chart: {
+                            title: 'Database size',
+                            subtitle: 'database size collect every ' + Configuration.INTERVAL + ' minutes'
+                        }
+                    },
+                    size = JSON.parse(scope.size),
+                    rows = [];
+
+                size.map(function (item) {
+                    var date = new Date(item.date),
+                        value = parseInt(item.value),
+                        row = [date, value];
+
+                    rows.push(row);
+                });
+
                 function drawChart () {
-                    //var data = google.visualization.arrayToDataTable(result)
-                    var data = google.visualization.arrayToDataTable([
-                        ['Year', 'Sales', 'Expenses'],
-                        ['2004',  1000,      400],
-                        ['2005',  1170,      460],
-                        ['2006',  660,       1120],
-                        ['2007',  1030,      540]
-                    ]);
+                    var data = new google.visualization.DataTable(),
+                        chart = new google.charts.Line(component);
 
-                    var options = {
-                        title: 'Company Performance',
-                        curveType: 'function',
-                        legend: { position: 'bottom' }
-                    };
-
-                    var chart = new google.visualization.LineChart(
-                        document.getElementById('curve_chart'));
+                    data.addColumn('datetime', null);
+                    data.addColumn('number', 'Size');
+                    data.addRows(rows);
 
                     chart.draw(data, options);
                 }

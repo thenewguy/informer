@@ -120,4 +120,4 @@ DJANGO_INFORMERS = (
     ('informer.checker.cache', 'CacheInformer'),
 )
 
-DJANGO_INFORMER_PREVENT_SAVE_UNTIL = 1
+DJANGO_INFORMER_PREVENT_SAVE_UNTIL = 5

@@ -28,7 +28,8 @@ class DefaultView(View):
         """
 
         data = {
-            'URL': reverse('default-informer')
+            'URL': reverse('default-informer'),
+            'INTERVAL': settings.DJANGO_INFORMER_PREVENT_SAVE_UNTIL
         }
 
         return render(request, self.template, data, content_type='text/html')
