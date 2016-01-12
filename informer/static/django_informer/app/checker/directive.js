@@ -7,24 +7,37 @@
         return {
             restrict: 'A',
             templateUrl: '/static/django_informer/app/checker/chart.tmpl.html',
+            scope: {
+                name: '@',
+                collect: '@'
+            },
             link: function (scope, element, attrs) {
-                var container = element[0];
-                var chart = new google.visualization.Timeline(container);
-                var dataTable = new google.visualization.DataTable();
+                var container = element[0],
+                    result = JSON.parse(scope.collect);
 
-                dataTable.addColumn({ type: 'string', id: 'President' });
-                dataTable.addColumn({ type: 'date', id: 'Start' });
-                dataTable.addColumn({ type: 'date', id: 'End' });
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
 
-                function onSuccess (response) {
-
-                    dataTable.addRows([
-                        [ 'Washington', new Date(1789, 3, 30), new Date(1797, 2, 4) ],
-                        [ 'Adams',      new Date(1797, 2, 4),  new Date(1801, 2, 4) ],
-                        [ 'Jefferson',  new Date(1801, 2, 4),  new Date(1809, 2, 4) ],
+                function drawChart () {
+                    //var data = google.visualization.arrayToDataTable(result)
+                    var data = google.visualization.arrayToDataTable([
+                        ['Year', 'Sales', 'Expenses'],
+                        ['2004',  1000,      400],
+                        ['2005',  1170,      460],
+                        ['2006',  660,       1120],
+                        ['2007',  1030,      540]
                     ]);
 
-                    chart.draw(dataTable);
+                    var options = {
+                        title: 'Company Performance',
+                        curveType: 'function',
+                        legend: { position: 'bottom' }
+                    };
+
+                    var chart = new google.visualization.LineChart(
+                        document.getElementById('curve_chart'));
+
+                    chart.draw(data, options);
                 }
 
                 function onFailure () {
