@@ -54,6 +54,8 @@
             (function () {
                 'use strict';
 
+                google.charts.load('current', {'packages':['line']});
+
                 var app = angular.module('informer.settings', []);
 
                 app.constant('CONFIGURATION', {

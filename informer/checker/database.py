@@ -54,45 +54,96 @@ class PostgresInformer(DatabaseInformer):
     https://gist.github.com/robertsosinski/6345564
     """
 
-    def _execute_query(self, query):
-        try:
-            cursor = connection.cursor()
-            cursor.execute(query)
-        except Exception as e:
-            raise e
-        else:
-            return cursor.fetchone()
-        finally:
-            cursor.close()
+    EXCEPTIONS = (
+        Error, InterfaceError, DatabaseError, DataError, OperationalError,
+        IntegrityError, InternalError, ProgrammingError, NotSupportedError)
 
     def check_size(self):
-        database = settings.DATABASES.get('default')
-        name = database.get('NAME')
-        query = self.query_database_stats(name)
-
         try:
-            db, size, commit, rollback, read, hit = self._execute_query(query)
-        except (Error, InterfaceError, DatabaseError, DataError,
-                OperationalError, IntegrityError, InternalError,
-                ProgrammingError, NotSupportedError) as db_error:
-            return 0, 'We can not get the database size (%s).' % db_error
-        except Exception as error:
-            raise InformerException(
-                'An error occured when trying access database: %s' % error)
+            database = settings.DATABASES.get('default').get('NAME')
+            query = self.query_database_stats(database)
+            cursor = connection.cursor()
+            cursor.execute(query)
+
+            db, size, commit, rollback, read, hit = cursor.fetchone()
+        except self.EXCEPTIONS as db_err:
+            return 0, 'We can not get the database size (%s).' % db_err
+        except Exception as err:
+            raise InformerException('Failure to access the database: %s' % err)
         else:
             return size, 'database size on %s' % datetime.now()
 
+    def check_commit(self):
+        try:
+            database = settings.DATABASES.get('default').get('NAME')
+            query = self.query_database_stats(database)
+            cursor = connection.cursor()
+            cursor.execute(query)
+
+            db, size, commit, rollback, read, hit = cursor.fetchone()
+        except self.EXCEPTIONS as db_err:
+            return 0, 'We can not get the commit (%s).' % db_err
+        except Exception as err:
+            raise InformerException('Failure to access the database: %s' % err)
+        else:
+            return commit, 'commit on %s' % datetime.now()
+
+    def check_rollback(self):
+        try:
+            database = settings.DATABASES.get('default').get('NAME')
+            query = self.query_database_stats(database)
+            cursor = connection.cursor()
+            cursor.execute(query)
+
+            db, size, commit, rollback, read, hit = cursor.fetchone()
+        except self.EXCEPTIONS as db_err:
+            return 0, 'We can not get the rollback (%s).' % db_err
+        except Exception as err:
+            raise InformerException('Failure to access the database: %s' % err)
+        else:
+            return rollback, 'rollback on %s' % datetime.now()
+
+    def check_read(self):
+        try:
+            database = settings.DATABASES.get('default').get('NAME')
+            query = self.query_database_stats(database)
+            cursor = connection.cursor()
+            cursor.execute(query)
+
+            db, size, commit, rollback, read, hit = cursor.fetchone()
+        except self.EXCEPTIONS as db_err:
+            return 0, 'We can not get the read (%s).' % db_err
+        except Exception as err:
+            raise InformerException('Failure to access the database: %s' % err)
+        else:
+            return read, 'read on %s' % datetime.now()
+
+    def check_hit(self):
+        try:
+            database = settings.DATABASES.get('default').get('NAME')
+            query = self.query_database_stats(database)
+            cursor = connection.cursor()
+            cursor.execute(query)
+
+            db, size, commit, rollback, read, hit = cursor.fetchone()
+        except self.EXCEPTIONS as db_err:
+            return 0, 'We can not get the hit (%s).' % db_err
+        except Exception as err:
+            raise InformerException('Failure to access the database: %s' % err)
+        else:
+            return hit, 'hit on %s' % datetime.now()
+
     def query_database_stats(self, database):
         return """
-        SELECT
-            datname,
-            pg_database_size('%s') db_size,
-            xact_commit,
-            xact_rollback,
-            blks_read,
-            blks_hit
-        FROM
-            pg_stat_database
-        WHERE
-            datname = '%s'
-        """ % (database, database)
+            SELECT
+                datname,
+                pg_database_size('%s') db_size,
+                xact_commit,
+                xact_rollback,
+                blks_read,
+                blks_hit
+            FROM
+                pg_stat_database
+            WHERE
+                datname = '%s'
+            """ % (database, database)

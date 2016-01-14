@@ -3,46 +3,45 @@
 
     var checker = angular.module('informer.checker');
 
-    checker.directive('informerPostgresSizeChart', ['MeasureService', 'CONFIGURATION', function (Measure, Configuration) {
+    checker.directive('informerTimeSeriesChart', ['MeasureService', 'CONFIGURATION', function (Measure, Configuration) {
         return {
             restrict: 'A',
             template: '',
             scope: {
-                name: '@',
-                size: '@'
+                informer: '@',
+                measure: '@'
             },
             link: function (scope, element, attrs) {
-                google.charts.load('current', {'packages':['line']});
-                google.charts.setOnLoadCallback(drawChart);
+                if (scope.measure === 'availability') {
+                    return;
+                }
 
                 var component = element[0],
-                    options = {
+                    chart = new google.charts.Line(component),
+                    data = new google.visualization.DataTable(),
+                    params = {
+                        'informer': scope.informer,
+                        'measure': scope.measure
+                    };
+
+                data.addColumn('datetime', null);
+                data.addColumn('number', scope.measure)
+
+                Measure.query(params, function (response) {
+                    response.map(function (item) {
+                        var date = new Date(item.date),
+                            value = parseInt(item.value);
+
+                        data.addRow([date, value]);
+                    });
+
+                    chart.draw(data, {
                         chart: {
-                            title: 'Database size',
-                            subtitle: 'database size collect every ' + Configuration.INTERVAL + ' minutes'
+                            title: scope.measure,
+                            subtitle: 'data collected every ' + Configuration.INTERVAL + ' minutes.'
                         }
-                    },
-                    size = JSON.parse(scope.size),
-                    rows = [];
-
-                size.map(function (item) {
-                    var date = new Date(item.date),
-                        value = parseInt(item.value),
-                        row = [date, value];
-
-                    rows.push(row);
+                    });
                 });
-
-                function drawChart () {
-                    var data = new google.visualization.DataTable(),
-                        chart = new google.charts.Line(component);
-
-                    data.addColumn('datetime', null);
-                    data.addColumn('number', 'Size');
-                    data.addRows(rows);
-
-                    chart.draw(data, options);
-                }
 
                 function onFailure () {
                 }

@@ -10,35 +10,18 @@
         $scope.availability = 0;
         $scope.measures = [];
 
-        Informer.get({'informer': params.informer}, successOnGetDetails, fail);
+        Informer.get({'informer': params.informer}, successOnGetDetails, onFailure);
+        Measure.query({ 'informer': params.informer, 'measure': 'availability' }, successOnGetMeasure, onFailure);
 
         function successOnGetDetails (response) {
             $scope.informer = response;
-            $scope.informer.measures.map(getMeasureValues);
         }
 
-        function getMeasureValues (measure) {
-            Measure.query({
-                'informer': params.informer,
-                'measure': measure
-            }, function (response) {
-
-                if (measure === 'availability') {
-                    calculateAvailability(response);
-                } else {
-                    var data = {
-                        'measure': measure,
-                        'result': response
-                    }
-
-                    $scope.measures.push(data);
-
-                }
-
-            }, fail);
+        function successOnGetMeasure (response) {
+            calculateAvailability(response);
         }
 
-        function fail () {
+        function onFailure () {
             $scope.informer = {};
             $scope.message = 'Crap. A error ocurred.';
         }

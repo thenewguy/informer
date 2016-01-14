@@ -161,11 +161,6 @@ class PostgresInformerTest(TestCase):
     def setUp(self):
         self.informer = PostgresInformer()
 
-    def test_execute_query(self):
-        query = self.informer.query_database_stats('postgres')
-
-        self.assertNumQueries(1, lambda: self.informer._execute_query(query))
-
     @freeze_time('2012-01-14 12:07:21')
     def test_size(self):
         """
@@ -176,7 +171,7 @@ class PostgresInformerTest(TestCase):
         self.assertTrue(value > 0)
         self.assertEqual('database size on 2012-01-14 12:07:21', message)
 
-    @mock.patch.object(PostgresInformer, '_execute_query')
+    @mock.patch.object(PostgresInformer, 'query_database_stats')
     def test_check_size_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
@@ -185,7 +180,7 @@ class PostgresInformerTest(TestCase):
 
         self.assertRaises(InformerException, self.informer.check_size)
 
-    @mock.patch.object(PostgresInformer, '_execute_query')
+    @mock.patch.object(PostgresInformer, 'query_database_stats')
     def test_check_size_with_database_error(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad

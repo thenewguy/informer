@@ -20,12 +20,11 @@
 
     <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
 
-    <div ng-repeat="measure in measures">
-        <md-divider></md-divider><br />
-
-        <div informer-postgres-size-chart
-             data-name="{{measure.measure}}"
-             data-size="{{measure.result}}">
+    <div data-ng-repeat="measure in informer.measures">
+        <div informer-time-series-chart
+            data-informer="{{ informer.name | name }}"
+            data-measure="{{measure}}"></div>
         </div>
     </div>
+
 </div>
