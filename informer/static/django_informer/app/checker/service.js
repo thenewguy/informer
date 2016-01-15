@@ -29,7 +29,7 @@
 
     function MeasureService ($resource, Configuration) {
         return $resource(
-            Configuration.URL + ':informer/:measure',
+            Configuration.URL + ':informer/:measure/',
             {'informer': '@informer', 'measure': '@measure'}
         );
     }
