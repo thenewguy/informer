@@ -16,23 +16,31 @@ legacy:
     ports:
         - "8000:8000"
 
+nginx:
+    build: containers/nginx
+    volumes:
+        - ./containers/nginx/nginx.conf:/etc/nginx/conf.d/informer.conf
+        - ./informer/static/:/usr/share/nginx/html
+    ports:
+        - "4000:8080"
+    links:
+        - sample
+
 sample:
     build: containers/sample
     working_dir: /usr/src/app
-    command: python manage.py runserver 0.0.0.0:8000
+    command:  gunicorn --bind "0.0.0.0:8000" --workers 4 --worker-class "gevent" --reload sample.wsgi
     volumes:
         - ./sample/sample/:/usr/src/app
         - ./informer/:/usr/src/app/informer
-    ports:
-        - "8000:8000"
     links:
         - postgres
 
-interface:
-    build: containers/interface
+node:
+    build: containers/node
     working_dir: /usr/src/app
     volumes:
         - ./informer/static/django_informer/:/usr/src/app
 
 postgres:
-    image: postgres:9.4.5
+    image: postgres:9.5
