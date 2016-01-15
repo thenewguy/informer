@@ -15,16 +15,19 @@
 
     <md-divider></md-divider>
 
-    <span class="md-title">Measures</span>
-    <span class="md-subhead">data collected from {{informer.name | lowercase}}.</span>
+    <span class="md-headline">Measures</span>
+    <span class="md-subhead">data collected from {{informer.name}}.</span>
 
     <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
 
-    <div data-ng-repeat="measure in informer.measures">
+    <div ng-repeat="measure in informer.measures" ng-if="measure !== 'availability'">
+        <h1 class="md-title">{{measure}}</h1>
+
         <div informer-time-series-chart
             data-informer="{{ informer.name | name }}"
-            data-measure="{{measure}}"></div>
-        </div>
+            data-measure="{{measure}}"
+            flex="95"></div>
+        </div><br />
     </div>
 
 </div>

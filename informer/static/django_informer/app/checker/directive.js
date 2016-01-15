@@ -12,10 +12,6 @@
                 measure: '@'
             },
             link: function (scope, element, attrs) {
-                if (scope.measure === 'availability') {
-                    return;
-                }
-
                 var component = element[0],
                     chart = new google.charts.Line(component),
                     data = new google.visualization.DataTable(),
@@ -35,12 +31,7 @@
                         data.addRow([date, value]);
                     });
 
-                    chart.draw(data, {
-                        chart: {
-                            title: scope.measure,
-                            subtitle: 'data collected every ' + Configuration.INTERVAL + ' minutes.'
-                        }
-                    });
+                    chart.draw(data);
                 });
 
                 function onFailure () {
