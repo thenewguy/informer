@@ -19,7 +19,7 @@ def pytest_configure():
             'django.contrib.messages',
             'django.contrib.staticfiles',
             'informer'),
-        MIDDLEWARE_CLASSES = (
+        MIDDLEWARE_CLASSES=(
             'django.contrib.sessions.middleware.SessionMiddleware',
             'django.middleware.common.CommonMiddleware',
             'django.middleware.csrf.CsrfViewMiddleware',
@@ -29,38 +29,38 @@ def pytest_configure():
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
             'django.middleware.security.SecurityMiddleware',
         ),
-        DATABASES = {
+        DATABASES={
             'default': {
                 'ENGINE': 'django.db.backends.sqlite3',
                 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
             }
         },
-        CACHES = {
+        CACHES={
             'default': {
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
                 'LOCATION': 'unique-snowflake',
             }
         },
-        TEMPLATES = [{
+        TEMPLATES=[{
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'APP_DIRS': True,
         }],
-        ROOT_URLCONF = 'informer.urls',
-        STATIC_URL = '/static/',
+        ROOT_URLCONF='informer.urls',
+        STATIC_URL='/static/',
         STATIC_ROOT = '/static/',
-        STATICFILES_DIRS = (
+        STATICFILES_DIRS=(
             os.path.join(BASE_DIR, 'static'),
         ),
-        DJANGO_INFORMERS = (
+        DJANGO_INFORMERS=(
             ('informer.checker.database', 'DatabaseInformer'),
             ('informer.checker.storage', 'StorageInformer'),
             ('informer.checker.celery', 'CeleryInformer'),
             ('informer.checker.cache', 'CacheInformer'),
         ),
-        DJANGO_INFORMER_PREVENT_SAVE_UNTIL = 5,
-        BROKER_BACKEND = 'memory',
+        DJANGO_INFORMER_PREVENT_SAVE_UNTIL=5,
+        BROKER_BACKEND='memory',
         BROKER_URL='memory://',
-        CELERY_ALWAYS_EAGER = True,
-        CELERY_EAGER_PROPAGATES_EXCEPTIONS = True,
-        CELERY_ACCEPT_CONTENT = ['json'],
+        CELERY_ALWAYS_EAGER=True,
+        CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+        CELERY_ACCEPT_CONTENT=['json'],
     )
