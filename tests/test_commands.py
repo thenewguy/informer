@@ -12,7 +12,7 @@ from django.utils.six import StringIO
 pytestmark = pytest.mark.django_db
 
 
-class CheckInformerTest(TestCase):
+class InformerTest(TestCase):
     def test_command_list(self):
         out = StringIO()
         call_command('informer', '--list', stdout=out)
@@ -55,6 +55,21 @@ class CheckInformerTest(TestCase):
         expected = [
             'Checking Informers.',
             'Checking DatabaseInformer... Your database is operational.']
+
+        result = out.getvalue()
+
+        for item in expected:
+            self.assertTrue(item in result)
+
+    def test_command_check_with_unknown_informer(self):
+        """
+        Call command specifying an unknown informer are (silently) ignored.
+        """
+        out = StringIO()
+        call_command('informer', 'UnknownInformer', stdout=out)
+
+        expected = [
+            'No informer was found with names provided (UnknownInformer).']
 
         result = out.getvalue()
 

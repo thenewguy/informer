@@ -38,6 +38,8 @@ class Command(BaseCommand):
         for name in names:
             result += [i for i in DJANGO_INFORMERS if name in i]
 
+        # ToDo: print the names that not correspond a any Informer.
+
         return result
 
     def handle(self, *args, **options):
@@ -70,6 +72,13 @@ class Command(BaseCommand):
         names = options['informers']
 
         informers = self._get_informers(names)
+
+        if not informers:
+            message = '\n No informer was found with names provided (%s).'
+            message %= ', '.join(names)
+
+            self.stdout.write(message)
+            return
 
         self.stdout.write('\n Checking Informers.')
         self.stdout.write('-' * 79)
