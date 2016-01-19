@@ -15,7 +15,7 @@ pytestmark = pytest.mark.django_db
 class InformerTest(TestCase):
     def test_command_list(self):
         out = StringIO()
-        call_command('informer', '--list', stdout=out)
+        call_command('check_informer', '--list', stdout=out)
 
         expected = [
             'Below the informers that appear in settings.',
@@ -33,7 +33,7 @@ class InformerTest(TestCase):
         Call command without specify a Informer.
         """
         out = StringIO()
-        call_command('informer', stdout=out)
+        call_command('check_informer', stdout=out)
 
         expected = [
             'Checking Informers.',
@@ -50,7 +50,7 @@ class InformerTest(TestCase):
         Call command specifying an informer.
         """
         out = StringIO()
-        call_command('informer', 'DatabaseInformer', stdout=out)
+        call_command('check_informer', 'DatabaseInformer', stdout=out)
 
         expected = [
             'Checking Informers.',
@@ -66,7 +66,7 @@ class InformerTest(TestCase):
         Call command specifying an unknown informer are (silently) ignored.
         """
         out = StringIO()
-        call_command('informer', 'UnknownInformer', stdout=out)
+        call_command('check_informer', 'UnknownInformer', stdout=out)
 
         expected = [
             'No informer was found with names provided (UnknownInformer).']
@@ -82,7 +82,7 @@ class InformerTest(TestCase):
         """
         with override_settings(DJANGO_INFORMERS=None):
             out = StringIO()
-            call_command('informer', stdout=out)
+            call_command('check_informer', stdout=out)
 
             expected = [
                 'No informer was found.',
@@ -99,7 +99,7 @@ class InformerTest(TestCase):
 
         out = StringIO()
 
-        call_command('informer', stderr=out)
+        call_command('check_informer', stderr=out)
 
         expected = ['A generic exception occurred: Cataploft']
 
