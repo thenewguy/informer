@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""django informer commands"""
+"""
+django informer commands
+"""
 
 from django.conf import settings
 from django.core.management.base import BaseCommand

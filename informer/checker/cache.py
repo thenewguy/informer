@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""django informer checker for Cache"""
+"""
+django informer checker for Cache
+"""
 
 from __future__ import absolute_import
 

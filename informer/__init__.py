@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""django informer"""
+"""
+django informer
+"""
 
 __title__ = 'Django Informer'
 __version__ = '0.1.8'

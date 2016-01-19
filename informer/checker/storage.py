@@ -1,6 +1,8 @@
 # coding: utf-8
 
-"""django informer checker for Storage"""
+"""
+django informer checker for Storage
+"""
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
