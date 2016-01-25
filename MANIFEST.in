@@ -5,6 +5,7 @@ include informer/static/django_informer/package.json
 recursive-include informer/checker *
 recursive-include informer/management *
 recursive-include informer/templates *
+recursive-include informer/migrations *
 recursive-include informer/static/django_informer/app *
 recursive-include informer/static/django_informer/assets *
 recursive-include informer/static/django_informer/node_modules/angular *

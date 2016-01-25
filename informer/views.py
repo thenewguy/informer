@@ -8,11 +8,9 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import View
-
 from django.conf import settings
 
 from informer.checker.base import BaseInformer, InformerException
-
 from informer.models import Raw
 
 
@@ -27,9 +25,11 @@ class DefaultView(View):
         GET /informer/
         """
 
+        interval = getattr(settings, 'DJANGO_INFORMER_PREVENT_SAVE_UNTIL', 0)
+
         data = {
             'URL': reverse('default-informer'),
-            'INTERVAL': settings.DJANGO_INFORMER_PREVENT_SAVE_UNTIL
+            'INTERVAL': interval
         }
 
         return render(request, self.template, data, content_type='text/html')
