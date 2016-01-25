@@ -31,7 +31,7 @@ nginx:
 sample:
     build: containers/sample
     working_dir: /usr/src/app
-    command:  gunicorn --bind "0.0.0.0:8000" --workers 4 --worker-class "gevent" --reload sample.wsgi
+    command: gunicorn --bind "0.0.0.0:8000" --workers 4 --worker-class "gevent" --reload sample.wsgi
     volumes:
         - ./sample/sample/:/usr/src/app
         - ./informer/:/usr/src/app/informer
