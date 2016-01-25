@@ -12,27 +12,35 @@
                 measure: '@'
             },
             link: function (scope, element, attrs) {
-                var component = element[0],
-                    chart = new google.charts.Line(component),
-                    data = new google.visualization.DataTable(),
-                    params = {
-                        'informer': scope.informer,
-                        'measure': scope.measure
-                    };
+                google.charts.setOnLoadCallback(drawChart);
 
-                data.addColumn('datetime', null);
-                data.addColumn('number', scope.measure)
+                function drawChart () {
+                    var data = new google.visualization.DataTable(),
+                        chart = new google.charts.Line(element[0]),
+                        params = {
+                            'informer': scope.informer,
+                            'measure': scope.measure
+                        };
 
-                Measure.query(params, function (response) {
-                    response.map(function (item) {
-                        var date = new Date(item.date),
-                            value = parseInt(item.value);
+                    data.addColumn('datetime', null);
+                    data.addColumn('number', scope.measure);
 
-                        data.addRow([date, value]);
+                    Measure.get(params, function (response) {
+                        response.result.map(function (item) {
+                            var date = new Date(item.date),
+                                value = parseFloat(item.value);
+
+                            data.addRow([date, value]);
+                        });
+
+                        chart.draw(data, {
+                            chart: {
+                                title: scope.measure,
+                                subtitle: 'data collected by ' + scope.informer + ' to ' + scope.measure
+                            }
+                        });
                     });
-
-                    chart.draw(data);
-                });
+                }
 
                 function onFailure () {
                 }

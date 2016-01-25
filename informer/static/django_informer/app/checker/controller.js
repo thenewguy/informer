@@ -11,14 +11,14 @@
         $scope.measures = [];
 
         Informer.get({'informer': params.informer}, successOnGetDetails, onFailure);
-        Measure.query({ 'informer': params.informer, 'measure': 'availability' }, successOnGetMeasure, onFailure);
+        Measure.get({'informer': params.informer, 'measure': 'availability'}, successOnGetMeasure, onFailure);
 
         function successOnGetDetails (response) {
             $scope.informer = response;
         }
 
         function successOnGetMeasure (response) {
-            calculateAvailability(response);
+            calculateAvailability(response.result);
         }
 
         function onFailure () {

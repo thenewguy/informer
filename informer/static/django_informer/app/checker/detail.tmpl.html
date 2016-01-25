@@ -21,13 +21,12 @@
     <p class="md-display-1">availability <sup>{{availability | number:2}}%</sup></p>
 
     <div ng-repeat="measure in informer.measures" ng-if="measure !== 'availability'">
-        <h1 class="md-title">{{measure}}</h1>
-
         <div informer-time-series-chart
             data-informer="{{ informer.name | name }}"
             data-measure="{{measure}}"
+            style="margin-bottom: 5%"
             flex="95"></div>
-        </div><br />
+        </div>
     </div>
 
 </div>

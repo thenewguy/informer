@@ -12,7 +12,7 @@
         var informers = Discover.query({}, successOnGetInformersList, fail);
 
         function successOnGetInformersList (response) {
-            angular.forEach(response.informers, function (item) {
+            angular.forEach(response.result, function (item) {
                 Informer.get(
                     { 'informer': item.name },
                     successOnGetInformerDetails,
