@@ -5,6 +5,7 @@ django informer checker for Database
 """
 
 import logging
+
 from datetime import datetime
 
 from django.conf import settings
@@ -54,35 +55,35 @@ class PostgresInformer(DatabaseInformer):
     https://gist.github.com/robertsosinski/6345564
     """
 
-    EXCEPTIONS = (
-        Error, InterfaceError, DatabaseError, DataError, OperationalError,
-        IntegrityError, InternalError, ProgrammingError, NotSupportedError)
+    def __init__(self):
+        self.database = settings.DATABASES.get('default').get('NAME')
+        self.cursor = connection.cursor()
+
+        self.EXCEPTIONS = (
+            Error, InterfaceError, DatabaseError, DataError, OperationalError,
+            IntegrityError, InternalError, ProgrammingError, NotSupportedError)
 
     def check_size(self):
         try:
-            database = settings.DATABASES.get('default').get('NAME')
-            query = self.query_database_stats(database)
-            cursor = connection.cursor()
-            cursor.execute(query)
+            query = self.get_query_database_stats()
+            self.cursor.execute(query)
 
-            db, size, commit, rollback, read, hit = cursor.fetchone()
+            db, size, commit, rollback, read, hit = self.cursor.fetchone()
         except self.EXCEPTIONS as db_err:
             return 0, 'We can not get the database size (%s).' % db_err
         except Exception as err:
             raise InformerException('Failure to access the database: %s' % err)
         else:
-            return size, 'database size on %s' % datetime.now()
+            return size, 'size on %s' % datetime.now()
 
     def check_commit(self):
         try:
-            database = settings.DATABASES.get('default').get('NAME')
-            query = self.query_database_stats(database)
-            cursor = connection.cursor()
-            cursor.execute(query)
+            query = self.get_query_database_stats()
+            self.cursor.execute(query)
 
-            db, size, commit, rollback, read, hit = cursor.fetchone()
+            db, size, commit, rollback, read, hit = self.cursor.fetchone()
         except self.EXCEPTIONS as db_err:
-            return 0, 'We can not get the commit (%s).' % db_err
+            return 0, 'We can not get the database commit (%s).' % db_err
         except Exception as err:
             raise InformerException('Failure to access the database: %s' % err)
         else:
@@ -90,14 +91,12 @@ class PostgresInformer(DatabaseInformer):
 
     def check_rollback(self):
         try:
-            database = settings.DATABASES.get('default').get('NAME')
-            query = self.query_database_stats(database)
-            cursor = connection.cursor()
-            cursor.execute(query)
+            query = self.get_query_database_stats()
+            self.cursor.execute(query)
 
-            db, size, commit, rollback, read, hit = cursor.fetchone()
+            db, size, commit, rollback, read, hit = self.cursor.fetchone()
         except self.EXCEPTIONS as db_err:
-            return 0, 'We can not get the rollback (%s).' % db_err
+            return 0, 'We can not get the database rollback (%s).' % db_err
         except Exception as err:
             raise InformerException('Failure to access the database: %s' % err)
         else:
@@ -105,14 +104,12 @@ class PostgresInformer(DatabaseInformer):
 
     def check_read(self):
         try:
-            database = settings.DATABASES.get('default').get('NAME')
-            query = self.query_database_stats(database)
-            cursor = connection.cursor()
-            cursor.execute(query)
+            query = self.get_query_database_stats()
+            self.cursor.execute(query)
 
-            db, size, commit, rollback, read, hit = cursor.fetchone()
+            db, size, commit, rollback, read, hit = self.cursor.fetchone()
         except self.EXCEPTIONS as db_err:
-            return 0, 'We can not get the read (%s).' % db_err
+            return 0, 'We can not get the database read (%s).' % db_err
         except Exception as err:
             raise InformerException('Failure to access the database: %s' % err)
         else:
@@ -120,24 +117,22 @@ class PostgresInformer(DatabaseInformer):
 
     def check_hit(self):
         try:
-            database = settings.DATABASES.get('default').get('NAME')
-            query = self.query_database_stats(database)
-            cursor = connection.cursor()
-            cursor.execute(query)
+            query = self.get_query_database_stats()
+            self.cursor.execute(query)
 
-            db, size, commit, rollback, read, hit = cursor.fetchone()
+            db, size, commit, rollback, read, hit = self.cursor.fetchone()
         except self.EXCEPTIONS as db_err:
-            return 0, 'We can not get the hit (%s).' % db_err
+            return 0, 'We can not get the database hit (%s).' % db_err
         except Exception as err:
             raise InformerException('Failure to access the database: %s' % err)
         else:
             return hit, 'hit on %s' % datetime.now()
 
-    def query_database_stats(self, database):
+    def get_query_database_stats(self):
         return """
             SELECT
                 datname,
-                pg_database_size('%s') db_size,
+                pg_database_size('{0}') db_size,
                 xact_commit,
                 xact_rollback,
                 blks_read,
@@ -145,5 +140,4 @@ class PostgresInformer(DatabaseInformer):
             FROM
                 pg_stat_database
             WHERE
-                datname = '%s'
-            """ % (database, database)
+                datname = '{0}'""".format(self.database)

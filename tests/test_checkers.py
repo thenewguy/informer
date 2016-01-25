@@ -9,6 +9,7 @@ import pytest
 
 from django.test import TestCase
 from django.db import DatabaseError
+from django.db.backends.utils import CursorWrapper
 from django.core.cache import cache
 
 from freezegun import freeze_time
@@ -128,7 +129,7 @@ class DatabaseInformerTest(TestCase):
         self.assertEqual(expected, informer.check_availability())
 
     @mock.patch.object(Raw.objects, 'count')
-    def test_check_fails(self, m_mock):
+    def test_check_availability_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
         """
@@ -161,37 +162,73 @@ class PostgresInformerTest(TestCase):
     def setUp(self):
         self.informer = PostgresInformer()
 
-    @freeze_time('2012-01-14 12:07:21')
-    def test_size(self):
+    def test_check_availability(self):
         """
         Test if with 'ideal scenario', all goes fine
         """
-        value, message = self.informer.check_size()
+        informer = PostgresInformer()
 
-        self.assertTrue(value > 0)
-        self.assertEqual('database size on 2012-01-14 12:07:21', message)
+        expected = (True, 'Your database is operational.')
 
-    @mock.patch.object(PostgresInformer, 'query_database_stats')
-    def test_check_size_fails(self, m_mock):
+        self.assertEqual(expected, informer.check_availability())
+
+    @mock.patch.object(Raw.objects, 'count')
+    def test_check_availability_fails(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
         """
         m_mock.side_effect = Exception('Boom')
 
-        self.assertRaises(InformerException, self.informer.check_size)
+        informer = PostgresInformer()
 
-    @mock.patch.object(PostgresInformer, 'query_database_stats')
-    def test_check_size_with_database_error(self, m_mock):
+        self.assertRaises(InformerException, informer.check_availability)
+
+    @freeze_time('2012-01-14 12:07:21')
+    def test_check_measures(self):
+        """
+        Test if with 'ideal scenario', all goes fine
+        """
+        measures = ['size', 'commit', 'rollback', 'read', 'hit']
+
+        for measure in measures:
+            checker = getattr(self.informer, 'check_%s' % measure)
+
+            value, message = checker()
+
+            expected = '%s on 2012-01-14 12:07:21' % measure
+
+            self.assertTrue(value > -1)
+            self.assertEqual(expected, message)
+
+    @mock.patch.object(CursorWrapper, 'execute')
+    def test_check_measures_fails(self, m_mock):
+        """
+        Test if with 'broken scenario', all goes bad
+        """
+        m_mock.side_effect = Exception('Boom')
+
+        measures = ['size', 'commit', 'rollback', 'read', 'hit']
+
+        for measure in measures:
+            checker = getattr(self.informer, 'check_%s' % measure)
+
+            self.assertRaises(InformerException, checker)
+
+    @mock.patch.object(PostgresInformer, 'get_query_database_stats')
+    def test_check_measures_with_database_error(self, m_mock):
         """
         Test if with 'broken scenario', all goes bad
         """
         m_mock.side_effect = DatabaseError('Boom')
 
-        expected = (0, 'We can not get the database size (Boom).')
+        measures = ['size', 'commit', 'rollback', 'read', 'hit']
 
-        result = self.informer.check_size()
+        for measure in measures:
+            checker = getattr(self.informer, 'check_%s' % measure)
 
-        self.assertTupleEqual(expected, result)
+            expected = (0, 'We can not get the database %s (Boom).' % measure)
+
+            self.assertTupleEqual(expected, checker())
 
 
 class StorageInformerTest(TestCase):
