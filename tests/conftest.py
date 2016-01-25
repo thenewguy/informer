@@ -8,6 +8,19 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+DATABASE = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'postgres',
+        'PORT': '5432',
+    }
+}
+
+if 'TRAVIS' in os.environ:
+    DATABASE['default']['HOST'] = 'localhost'
+
 
 def pytest_configure():
     settings.configure(
@@ -29,15 +42,7 @@ def pytest_configure():
             'django.middleware.clickjacking.XFrameOptionsMiddleware',
             'django.middleware.security.SecurityMiddleware',
         ),
-        DATABASES={
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'postgres',
-                'USER': 'postgres',
-                'HOST': 'postgres',
-                'PORT': '5432',
-            }
-        },
+        DATABASES=DATABASE,
         CACHES={
             'default': {
                 'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
