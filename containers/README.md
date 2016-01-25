@@ -6,6 +6,10 @@
 docker-compose run --rm application py.test tests
 ```
 
+```
+docker-compose run --rm legacy py.test tests
+```
+
 ## flake
 
 ```

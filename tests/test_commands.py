@@ -12,10 +12,10 @@ from django.utils.six import StringIO
 pytestmark = pytest.mark.django_db
 
 
-class CheckInformerTest(TestCase):
+class InformerTest(TestCase):
     def test_command_list(self):
         out = StringIO()
-        call_command('checkinformers', '--list', stdout=out)
+        call_command('checkinformer', '--list', stdout=out)
 
         expected = [
             'Below the informers that appear in settings.',
@@ -33,7 +33,7 @@ class CheckInformerTest(TestCase):
         Call command without specify a Informer.
         """
         out = StringIO()
-        call_command('checkinformers', stdout=out)
+        call_command('checkinformer', stdout=out)
 
         expected = [
             'Checking Informers.',
@@ -50,11 +50,26 @@ class CheckInformerTest(TestCase):
         Call command specifying an informer.
         """
         out = StringIO()
-        call_command('checkinformers', 'DatabaseInformer', stdout=out)
+        call_command('checkinformer', 'DatabaseInformer', stdout=out)
 
         expected = [
             'Checking Informers.',
             'Checking DatabaseInformer... Your database is operational.']
+
+        result = out.getvalue()
+
+        for item in expected:
+            self.assertTrue(item in result)
+
+    def test_command_check_with_unknown_informer(self):
+        """
+        Call command specifying an unknown informer are (silently) ignored.
+        """
+        out = StringIO()
+        call_command('checkinformer', 'UnknownInformer', stdout=out)
+
+        expected = [
+            'No informer was found with names provided (UnknownInformer).']
 
         result = out.getvalue()
 
@@ -67,7 +82,7 @@ class CheckInformerTest(TestCase):
         """
         with override_settings(DJANGO_INFORMERS=None):
             out = StringIO()
-            call_command('checkinformers', stdout=out)
+            call_command('checkinformer', stdout=out)
 
             expected = [
                 'No informer was found.',
@@ -84,7 +99,7 @@ class CheckInformerTest(TestCase):
 
         out = StringIO()
 
-        call_command('checkinformers', stderr=out)
+        call_command('checkinformer', stderr=out)
 
         expected = ['A generic exception occurred: Cataploft']
 
