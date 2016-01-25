@@ -60,7 +60,7 @@ class DiscoverView(View):
 
             informers.append(informer)
 
-        return JsonResponse({'informers': informers})
+        return JsonResponse({'result': informers})
 
 
 class InformerView(View):
@@ -117,6 +117,6 @@ class MeasureView(View):
 
             result = list(data)
         except Exception as error:
-            result = u'%s' % error
-
-        return JsonResponse(result, safe=False)
+            return JsonResponse({'result': '%s' % error})
+        else:
+            return JsonResponse({'result': result})

@@ -56,6 +56,7 @@ def pytest_configure():
         ),
         DJANGO_INFORMERS=(
             ('informer.checker.database', 'DatabaseInformer'),
+            ('informer.checker.database', 'PostgresInformer'),
             ('informer.checker.storage', 'StorageInformer'),
             ('informer.checker.celery', 'CeleryInformer'),
             ('informer.checker.cache', 'CacheInformer'),

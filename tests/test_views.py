@@ -50,9 +50,12 @@ class DiscoverViewTest(TestCase):
         result = json.loads(response.content.decode())
 
         expected = {
-            u'informers': [{
+            u'result': [{
                 u'url': u'/database/',
                 u'name': u'database'
+            }, {
+                u'url': u'/postgres/',
+                u'name': u'postgres'
             }, {
                 u'url': u'/storage/',
                 u'name': u'storage'
