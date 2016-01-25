@@ -33,7 +33,7 @@ docker-compose run --rm application py.test tests --cov-report html --cov inform
 ### before built or run _development sample app_, you need get packages from UI
 
 ```
-docker-compose run --rm interface npm install
+docker-compose run --rm node npm install
 ```
 
 ### and then build the package
