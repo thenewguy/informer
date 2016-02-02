@@ -39,5 +39,5 @@ docker-compose run --rm node npm install
 ### and then build the package
 
 ```
-docker-compose run --rm application python setup.py sdist bdist_wheel
+docker-compose run --rm --no-deps application python setup.py sdist bdist_wheel
 ```
