@@ -45,4 +45,4 @@ node:
         - ./informer/static/django_informer/:/usr/src/app
 
 postgres:
-    image: postgres:9.5
+    image: postgres:9.5.1
