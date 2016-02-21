@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.views.generic import View
 from django.conf import settings
+from django.contrib.syndication.views import Feed
 
 from informer.checker.base import BaseInformer, InformerException
 from informer.models import Raw
@@ -120,3 +121,21 @@ class MeasureView(View):
             return JsonResponse({'result': '%s' % error})
         else:
             return JsonResponse({'result': result})
+
+
+class InformerFeed(Feed):
+    title = 'Django Informer'
+    link = '/informer/feed/'
+    description = 'Latest data collected by Django Informer'
+
+    def items(self):
+        return Raw.objects.order_by('-date')[:10]
+
+    def item_title(self, item):  # pragma: no cover
+        return '{0} ({1})'.format(item.indicator, item.measure)
+
+    def item_description(self, item):  # pragma: no cover
+        return '{0} collected on {1}'.format(item.value, item.date)
+
+    def item_link(self, item):  # pragma: no cover
+        return reverse('feed-informer')

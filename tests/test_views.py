@@ -150,3 +150,19 @@ class MeasureViewTest(TestCase):
         response = self.client.get('/database/availability/')
 
         self.assertEqual(200, response.status_code)
+
+
+class FeedViewTest(TestCase):
+    """
+    Tests to Feed View
+    """
+
+    def test_get(self):
+        """
+        Test if feed is ok
+        """
+        client = Client()
+
+        response = client.get('/feed/')
+
+        self.assertEqual(200, response.status_code)
