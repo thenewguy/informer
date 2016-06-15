@@ -72,10 +72,27 @@ class DiscoverView(View):
         return JsonResponse({'result': informers})
 
 class BasicHealthCheckView(View):
-    def get(self, *args, **kwargs):
-        return HttpResponse("Status: Online", status=200, content_type="text/plain")
+    def build_response(self, request, data):
+        plain_content_type = "text/plain"
+        json_content_type = "application/json"
+        raw_content_types = request.META.get('HTTP_ACCEPT', '*/*').split(',')
+        
+        json_requested = any([mime.lower().startswith(json_content_type) for mime in raw_content_types])
+        
+        if json_requested:
+            response = JsonResponse(data, status=data["status"])
+        else:
+            response = HttpResponse(content_type=plain_content_type, **data)
+        
+        patch_vary_headers(response, ["accept"])
+        
+        return response
+    
+    def get(self, request, *args, **kwargs):
+        data = dict(content="Status: Online", status=200)
+        return self.build_response(request, data)
 
-class HealthCheckView(View):
+class HealthCheckView(BasicHealthCheckView):
     informers = getattr(settings, 'DJANGO_INFORMERS', ())
 
     def get_cache_key(self):
@@ -91,21 +108,8 @@ class HealthCheckView(View):
     
     def build_response(self, request, data):
         cooldown = (data.pop('expires') - datetime.utcnow()).seconds
-        
-        plain_content_type = "text/plain"
-        json_content_type = "application/json"
-        raw_content_types = request.META.get('HTTP_ACCEPT', '*/*').split(',')
-        
-        json_requested = any([mime.lower().startswith(json_content_type) for mime in raw_content_types])
-        
-        if json_requested:
-            response = JsonResponse(data, status=data["status"])
-        else:
-            response = HttpResponse(content_type=plain_content_type, **data)
-        
-        patch_vary_headers(response, ["accept"])
+        response = super(HealthCheckView, self).build_response(request, data)
         patch_response_headers(response, cache_timeout=cooldown)
-        
         return response
 
     def get(self, request, *args, **kwargs):
