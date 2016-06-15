@@ -122,7 +122,7 @@ class HealthCheckView(BasicHealthCheckView):
         data = cache.get(key)
         if data is None:
             url = request.build_absolute_uri(reverse('default-informer'))
-            caption = ("Status: %s. This is an endpoint for automated"
+            caption = ("Status: %s. This is an endpoint for automated "
                        "monitoring tools. Human-readable output available "
                        "at: {}".format(url))
             data = dict(content=caption % "Healthy", status=200)
