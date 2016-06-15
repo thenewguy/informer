@@ -241,7 +241,7 @@ class StorageInformerTest(TestCase):
         Test if Unicode is correctly specified.
         """
         informer = StorageInformer()
-        expected = u'Check if Storage is operational.'
+        expected = u'Check if FileSystemStorage is operational.'
         self.assertEqual(expected, str(informer))
 
     def test_check(self):
