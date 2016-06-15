@@ -10,13 +10,14 @@ from django.conf.urls import url
 from informer.checker.base import BaseInformer
 
 from informer.views import (
-    DefaultView, DiscoverView, InformerView, MeasureView, InformerFeed)
+    DefaultView, DiscoverView, HealthCheckView, InformerView, MeasureView, InformerFeed)
 
 
 urlpatterns = [
     url(r'^$', DefaultView.as_view(), name='default-informer'),
     url(r'^discover/$', DiscoverView.as_view(), name='discover-informer'),
-    url(r'^feed/$', InformerFeed(), name='feed-informer')
+    url(r'^feed/$', InformerFeed(), name='feed-informer'),
+    url(r'^health/$', HealthCheckView.as_view(), name='informer-health'),
 ]
 
 DJANGO_INFORMERS = getattr(settings, 'DJANGO_INFORMERS', ())
