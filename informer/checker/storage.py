@@ -9,7 +9,6 @@ from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 
 from informer.checker.base import BaseInformer, InformerException
-from __builtin__ import False
 
 
 class StorageInformer(BaseInformer):
