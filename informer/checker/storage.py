@@ -3,9 +3,11 @@
 """
 django informer checker for Storage
 """
+from uuid import uuid4
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.utils.encoding import force_text
 
 from informer.checker.base import BaseInformer, InformerException
 
@@ -14,34 +16,92 @@ class StorageInformer(BaseInformer):
     """
     Storage Informer.
     """
+    storage = default_storage
+    filename = 'django-informer.txt'
+
+    @property
+    def storage_name(self):
+        return self.storage.__class__.__name__
 
     def __str__(self):
-        return u'Check if Storage is operational.'
+        return u'Check if %s is operational.' % self.storage_name
 
     def check_availability(self):
         """
-        Perform check against Default Storage.
+        Perform check against Storage.
         """
+        valid_filename = self.storage.get_valid_name(self.filename)
+
         try:
-            # TODO: remove if already exists
+            verify_filename = False
+            if self.storage.exists(valid_filename):
+                try:
+                    self.storage.delete(valid_filename)
+                except NotImplementedError:
+                    pass
+                else:
+                    verify_filename = True
 
             # Save data.
-            content = ContentFile('File used by StorageInformer checking.')
-            path = default_storage.save('./django-informer.txt', content)
+            data = uuid4().hex
+            content = ContentFile(data)
+            saved_filename = self.storage.save(valid_filename, content)
 
-            # Check properties.
-            default_storage.size(path)
-            default_storage.url(path)
-            default_storage.path(path)
-            default_storage.modified_time(path)
-            default_storage.created_time(path)
+            # Check saved file name
+            if verify_filename:
+                if saved_filename != valid_filename:
+                    raise InformerException(
+                        ('Incorrect filename returned after writing to your '
+                         '%s storage.') % self.storage_name)
+
+            # Check methods.
+            try:
+                if content.size != self.storage.size(saved_filename):
+                    raise InformerException(
+                        'Incorrect size reported by your %s storage.' %
+                        self.storage_name)
+            except NotImplementedError:
+                pass
+
+            try:
+                self.storage.url(saved_filename)
+            except NotImplementedError:
+                pass
+
+            try:
+                self.storage.path(saved_filename)
+            except NotImplementedError:
+                pass
+
+            try:
+                self.storage.modified_time(saved_filename)
+            except NotImplementedError:
+                pass
+
+            try:
+                self.storage.created_time(saved_filename)
+            except NotImplementedError:
+                pass
+
+            # Check written data matches read data
+            content.seek(0)
+            written_data = force_text(content.read())
+            read_data = force_text(self.storage.open(saved_filename).read())
+            if read_data != written_data:
+                raise InformerException(
+                    ('Invalid data read after writing to your %s storage. '
+                     '"%s" expected but received "%s".') % (
+                        self.storage_name, written_data, read_data))
 
             # And remove file.
-            default_storage.delete(path)
+            try:
+                self.storage.delete(saved_filename)
+            except NotImplementedError:
+                pass
 
-            storage = default_storage.__class__.__name__
         except Exception as error:
             raise InformerException(
-                'A error occured when trying access your database: %s' % error)
+                'A error occured when trying access your %s storage: %s' % (
+                    self.storage_name, error))
         else:
-            return True, 'Your %s is operational.' % storage
+            return (True, 'Your %s is operational.' % self.storage_name)
