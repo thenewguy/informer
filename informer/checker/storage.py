@@ -30,14 +30,36 @@ class StorageInformer(BaseInformer):
             path = default_storage.save('./django-informer.txt', content)
 
             # Check properties.
-            default_storage.size(path)
-            default_storage.url(path)
-            default_storage.path(path)
-            default_storage.modified_time(path)
-            default_storage.created_time(path)
+            try:
+                default_storage.size(path)
+            except NotImplementedError:
+                pass
+
+            try:
+                default_storage.url(path)
+            except NotImplementedError:
+                pass
+
+            try:
+                default_storage.path(path)
+            except NotImplementedError:
+                pass
+
+            try:
+                default_storage.modified_time(path)
+            except NotImplementedError:
+                pass
+
+            try:
+                default_storage.created_time(path)
+            except NotImplementedError:
+                pass
 
             # And remove file.
-            default_storage.delete(path)
+            try:
+                default_storage.delete(path)
+            except NotImplementedError:
+                pass
 
             storage = default_storage.__class__.__name__
         except Exception as error:
