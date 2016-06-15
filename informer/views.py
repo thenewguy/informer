@@ -71,26 +71,30 @@ class DiscoverView(View):
 
         return JsonResponse({'result': informers})
 
+
 class BasicHealthCheckView(View):
     def build_response(self, request, data):
         plain_content_type = "text/plain"
         json_content_type = "application/json"
         raw_content_types = request.META.get('HTTP_ACCEPT', '*/*').split(',')
-        
-        json_requested = any([mime.lower().startswith(json_content_type) for mime in raw_content_types])
-        
+
+        json_requested = any(
+            [mime.lower().startswith(json_content_type) for mime in raw_content_types]
+        )
+
         if json_requested:
             response = JsonResponse(data, status=data["status"])
         else:
             response = HttpResponse(content_type=plain_content_type, **data)
-        
+
         patch_vary_headers(response, ["accept"])
-        
+
         return response
-    
+
     def get(self, request, *args, **kwargs):
         data = dict(content="Status: Online", status=200)
         return self.build_response(request, data)
+
 
 class HealthCheckView(BasicHealthCheckView):
     informers = getattr(settings, 'DJANGO_INFORMERS', ())
@@ -105,7 +109,7 @@ class HealthCheckView(BasicHealthCheckView):
             self.__class__.__name__,
             h.hexdigest(),
         ])
-    
+
     def build_response(self, request, data):
         cooldown = (data.pop('expires') - datetime.utcnow()).seconds
         response = super(HealthCheckView, self).build_response(request, data)
@@ -117,8 +121,9 @@ class HealthCheckView(BasicHealthCheckView):
         data = cache.get(key)
         if data is None:
             url = request.build_absolute_uri(reverse('default-informer'))
-            caption = ("Status: %s. This is an endpoint for automated monitoring tools. "
-                       "Human-readable output available at: {}".format(url))
+            caption = ("Status: %s. This is an endpoint for automated"
+                       "monitoring tools. Human-readable output available "
+                       "at: {}".format(url))
             data = dict(content=caption % "Healthy", status=200)
             for namespace, classname in self.informers:
                 informer = BaseInformer.get_class(namespace, classname)()
@@ -126,18 +131,24 @@ class HealthCheckView(BasicHealthCheckView):
                     operational, message = informer.check_availability()
                 except:
                     operational = False
-                    message = "Encountered exception during informer health check."
+                    message = ("Encountered exception during "
+                               "informer health check.")
                     logger.exception(message)
                 if not operational:
                     data = dict(content=caption % "Unhealthy", status=503)
                     logger.critical("Health checks failed! %s" % message)
                     break
-            interval = getattr(settings, 'DJANGO_INFORMER_PREVENT_SAVE_UNTIL', None) or 0
+            interval = getattr(
+                settings,
+                'DJANGO_INFORMER_PREVENT_SAVE_UNTIL',
+                None
+            ) or 0
             timeout = 60 * interval
             cooldown = timeout + 1
             data['expires'] = datetime.utcnow() + timedelta(seconds=cooldown)
             cache.set(key, data, timeout)
         return self.build_response(request, data)
+
 
 class InformerView(View):
     """
