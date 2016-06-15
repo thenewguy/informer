@@ -12,7 +12,7 @@ from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.utils.cache import patch_response_headers
+from django.utils.cache import patch_response_headers, patch_vary_headers
 from django.views.generic import View
 from django.conf import settings
 from django.contrib.syndication.views import Feed
@@ -85,6 +85,25 @@ class HealthCheckView(View):
             self.__class__.__name__,
             h.hexdigest(),
         ])
+    
+    def build_response(self, request, data):
+        cooldown = (data.pop('expires') - datetime.utcnow()).seconds
+        
+        plain_content_type = "text/plain"
+        json_content_type = "application/json"
+        raw_content_types = request.META.get('HTTP_ACCEPT', '*/*').split(',')
+        
+        json_requested = any([mime.lower().startswith(json_content_type) for mime in raw_content_types])
+        
+        if json_requested:
+            response = JsonResponse(data, status=data["status"])
+        else:
+            response = HttpResponse(content_type=plain_content_type, **data)
+        
+        patch_vary_headers(response, ["accept"])
+        patch_response_headers(response, cache_timeout=cooldown)
+        
+        return response
 
     def get(self, request, *args, **kwargs):
         key = self.get_cache_key()
@@ -93,7 +112,7 @@ class HealthCheckView(View):
             url = request.build_absolute_uri(reverse('default-informer'))
             caption = ("Status: %s. This is an endpoint for automated monitoring tools. "
                        "Human-readable output available at: {}".format(url))
-            data = dict(content=caption % "Healthy", status=200, content_type="text/plain")
+            data = dict(content=caption % "Healthy", status=200)
             for namespace, classname in self.informers:
                 informer = BaseInformer.get_class(namespace, classname)()
                 try:
@@ -103,7 +122,7 @@ class HealthCheckView(View):
                     message = "Encountered exception during informer health check."
                     logger.exception(message)
                 if not operational:
-                    data = dict(content=caption % "Unhealthy", status=503, content_type="text/plain")
+                    data = dict(content=caption % "Unhealthy", status=503)
                     logger.critical("Health checks failed! %s" % message)
                     break
             interval = getattr(settings, 'DJANGO_INFORMER_PREVENT_SAVE_UNTIL', None) or 0
@@ -111,11 +130,7 @@ class HealthCheckView(View):
             cooldown = timeout + 1
             data['expires'] = datetime.utcnow() + timedelta(seconds=cooldown)
             cache.set(key, data, timeout)
-        cooldown = (data.pop('expires') - datetime.utcnow()).seconds
-        response = HttpResponse(**data)
-        patch_response_headers(response, cache_timeout=cooldown)
-        return response
-
+        return self.build_response(request, data)
 
 class InformerView(View):
     """
