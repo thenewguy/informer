@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.utils.encoding import force_text
 
 from informer.checker.base import BaseInformer, InformerException
 
@@ -42,7 +43,7 @@ class StorageInformer(BaseInformer):
                     verify_filename = True
 
             # Save data.
-            data = uuid4().hex
+            data = force_text(uuid4().hex)
             content = ContentFile(data)
             saved_filename = self.storage.save(valid_filename, content)
 
