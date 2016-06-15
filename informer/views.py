@@ -71,6 +71,9 @@ class DiscoverView(View):
 
         return JsonResponse({'result': informers})
 
+class BasicHealthCheckView(View):
+    def get(self, *args, **kwargs):
+        return HttpResponse("Status: Online", status=200, content_type="text/plain")
 
 class HealthCheckView(View):
     informers = getattr(settings, 'DJANGO_INFORMERS', ())
