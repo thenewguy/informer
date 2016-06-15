@@ -14,6 +14,7 @@ class StorageInformer(BaseInformer):
     """
     Storage Informer.
     """
+    storage = default_storage
 
     def __str__(self):
         return u'Check if Storage is operational.'
@@ -27,41 +28,41 @@ class StorageInformer(BaseInformer):
 
             # Save data.
             content = ContentFile('File used by StorageInformer checking.')
-            path = default_storage.save('./django-informer.txt', content)
+            path = self.storage.save('./django-informer.txt', content)
 
             # Check properties.
             try:
-                default_storage.size(path)
+                self.storage.size(path)
             except NotImplementedError:
                 pass
 
             try:
-                default_storage.url(path)
+                self.storage.url(path)
             except NotImplementedError:
                 pass
 
             try:
-                default_storage.path(path)
+                self.storage.path(path)
             except NotImplementedError:
                 pass
 
             try:
-                default_storage.modified_time(path)
+                self.storage.modified_time(path)
             except NotImplementedError:
                 pass
 
             try:
-                default_storage.created_time(path)
+                self.storage.created_time(path)
             except NotImplementedError:
                 pass
 
             # And remove file.
             try:
-                default_storage.delete(path)
+                self.storage.delete(path)
             except NotImplementedError:
                 pass
 
-            storage = default_storage.__class__.__name__
+            storage = self.storage.__class__.__name__
         except Exception as error:
             raise InformerException(
                 'A error occured when trying access your database: %s' % error)
