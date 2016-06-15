@@ -48,3 +48,7 @@ for namespace, classname in DJANGO_INFORMERS:
         uri = url(r'^%s/%s/$' % (informer, measure), view, data, name=alias)
 
         urlpatterns.append(uri)
+    
+    # add healthcheck url
+    alias = 'informer-health-%s' % informer
+    uri = url(r'^health/%s/$' % informer, HealthCheckView.as_view(informers=[(namespace, classname)]), name=alias),
