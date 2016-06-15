@@ -7,6 +7,7 @@ from uuid import uuid4
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.utils.encoding import force_text
 
 from informer.checker.base import BaseInformer, InformerException
 
@@ -84,8 +85,8 @@ class StorageInformer(BaseInformer):
 
             # Check written data matches read data
             content.seek(0)
-            written_data = content.read()
-            read_data = self.storage.open(saved_filename).read()
+            written_data = force_text(content.read())
+            read_data = force_text(self.storage.open(saved_filename).read())
             if read_data != written_data:
                 raise InformerException(
                     ('Invalid data read after writing to your %s storage. '
