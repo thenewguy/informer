@@ -90,7 +90,7 @@ class StorageInformer(BaseInformer):
             if read_data != written_data:
                 raise InformerException(
                     ('Invalid data read after writing to your %s storage. '
-                    '"%s" expected but received "%s".') % (
+                     '"%s" expected but received "%s".') % (
                         self.storage_name, written_data, read_data))
 
             # And remove file.
