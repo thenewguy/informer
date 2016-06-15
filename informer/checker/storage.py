@@ -17,11 +17,11 @@ class StorageInformer(BaseInformer):
     storage = default_storage
 
     def __str__(self):
-        return u'Check if Storage is operational.'
+        return u'Check if %s is operational.' % self.storage.__class__.__name__
 
     def check_availability(self):
         """
-        Perform check against Default Storage.
+        Perform check against Storage.
         """
         try:
             # TODO: remove if already exists
@@ -62,9 +62,9 @@ class StorageInformer(BaseInformer):
             except NotImplementedError:
                 pass
 
-            storage = self.storage.__class__.__name__
         except Exception as error:
             raise InformerException(
                 'A error occured when trying access your database: %s' % error)
         else:
-            return True, 'Your %s is operational.' % storage
+            return (True,
+                    'Your %s is operational.' % self.storage.__class__.__name__)
