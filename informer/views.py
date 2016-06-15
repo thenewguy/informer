@@ -79,7 +79,8 @@ class BasicHealthCheckView(View):
         raw_content_types = request.META.get('HTTP_ACCEPT', '*/*').split(',')
 
         json_requested = any(
-            [mime.lower().startswith(json_content_type) for mime in raw_content_types]
+            [mime.lower().startswith(json_content_type)
+             for mime in raw_content_types]
         )
 
         if json_requested:
