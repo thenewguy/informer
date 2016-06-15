@@ -50,7 +50,7 @@ class StorageInformer(BaseInformer):
             if verify_filename:
                 if saved_filename != valid_filename:
                     raise InformerException(
-                    ('Invalid filename returned after writing to your '
+                    ('Incorrect filename returned after writing to your '
                      '%s storage.') % self.storage_name)
 
             # Check properties.
