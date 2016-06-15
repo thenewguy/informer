@@ -15,6 +15,7 @@ class StorageInformer(BaseInformer):
     Storage Informer.
     """
     storage = default_storage
+    filename = 'django-informer.txt'
 
     def __str__(self):
         return u'Check if %s is operational.' % self.storage.__class__.__name__
@@ -23,12 +24,18 @@ class StorageInformer(BaseInformer):
         """
         Perform check against Storage.
         """
+        filename = self.storage.get_valid_name(self.filename)
+
         try:
-            # TODO: remove if already exists
+            if self.storage.exists(filename):
+                try:
+                    self.storage.delete(filename)
+                except NotImplementedError:
+                    pass
 
             # Save data.
             content = ContentFile('File used by StorageInformer checking.')
-            path = self.storage.save('./django-informer.txt', content)
+            path = self.storage.save(filename, content)
 
             # Check properties.
             try:
