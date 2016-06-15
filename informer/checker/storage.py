@@ -32,13 +32,14 @@ class StorageInformer(BaseInformer):
         valid_filename = self.storage.get_valid_name(self.filename)
 
         try:
+            verify_filename = False
             if self.storage.exists(valid_filename):
                 try:
                     self.storage.delete(valid_filename)
                 except NotImplementedError:
-                    delete_is_implemented = False
+                    pass
                 else:
-                    delete_is_implemented = True
+                    verify_filename = True
 
             # Save data.
             data = uuid4().hex
@@ -46,7 +47,7 @@ class StorageInformer(BaseInformer):
             saved_filename = self.storage.save(valid_filename, content)
 
             # Check saved file name
-            if delete_is_implemented:
+            if verify_filename:
                 if saved_filename != valid_filename:
                     raise InformerException(
                     ('Invalid filename returned after writing to your '
