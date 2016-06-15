@@ -58,3 +58,4 @@ for namespace, classname in DJANGO_INFORMERS:
         HealthCheckView.as_view(informers=[(namespace, classname)]),
         name=alias,
     )
+    urlpatterns.append(uri)
