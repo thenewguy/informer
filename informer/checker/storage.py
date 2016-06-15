@@ -52,7 +52,10 @@ class StorageInformer(BaseInformer):
 
             # Check properties.
             try:
-                self.storage.size(saved_filename)
+                if content.size != self.storage.size(saved_filename):
+                    raise InformerException(
+                    'Incorrect size reported by your %s storage.' %
+                    self.storage.__class__.__name__)
             except NotImplementedError:
                 pass
 
