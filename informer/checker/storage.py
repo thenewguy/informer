@@ -71,7 +71,8 @@ class StorageInformer(BaseInformer):
 
         except Exception as error:
             raise InformerException(
-                'A error occured when trying access your database: %s' % error)
+                'A error occured when trying access your %s storage: %s' % (
+                self.storage.__class__.__name__, error))
         else:
             return (True,
                     'Your %s is operational.' % self.storage.__class__.__name__)
