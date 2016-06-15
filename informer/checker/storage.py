@@ -26,12 +26,12 @@ class StorageInformer(BaseInformer):
         """
         Perform check against Storage.
         """
-        filename = self.storage.get_valid_name(self.filename)
+        valid_filename = self.storage.get_valid_name(self.filename)
 
         try:
-            if self.storage.exists(filename):
+            if self.storage.exists(valid_filename):
                 try:
-                    self.storage.delete(filename)
+                    self.storage.delete(valid_filename)
                 except NotImplementedError:
                     verify_filename = False
                 else:
@@ -40,11 +40,11 @@ class StorageInformer(BaseInformer):
             # Save data.
             data = uuid4().hex
             content = ContentFile(data)
-            path = self.storage.save(filename, content)
+            saved_filename = self.storage.save(valid_filename, content)
 
             # Check saved file name
             if verify_filename:
-                if path != filename:
+                if saved_filename != valid_filename:
                     raise InformerException(
                     ('Invalid filename returned after writing to your '
                      '%s storage.') %
@@ -52,39 +52,39 @@ class StorageInformer(BaseInformer):
 
             # Check properties.
             try:
-                self.storage.size(path)
+                self.storage.size(saved_filename)
             except NotImplementedError:
                 pass
 
             try:
-                self.storage.url(path)
+                self.storage.url(saved_filename)
             except NotImplementedError:
                 pass
 
             try:
-                self.storage.path(path)
+                self.storage.path(saved_filename)
             except NotImplementedError:
                 pass
 
             try:
-                self.storage.modified_time(path)
+                self.storage.modified_time(saved_filename)
             except NotImplementedError:
                 pass
 
             try:
-                self.storage.created_time(path)
+                self.storage.created_time(saved_filename)
             except NotImplementedError:
                 pass
             
             # Check written data matches read data
-            if self.storage.open(path).read() != data:
+            if self.storage.open(saved_filename).read() != data:
                 raise InformerException(
                 'Invalid data read after writing to your %s storage.' %
                 self.storage.__class__.__name__)
 
             # And remove file.
             try:
-                self.storage.delete(path)
+                self.storage.delete(saved_filename)
             except NotImplementedError:
                 pass
 
