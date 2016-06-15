@@ -83,10 +83,14 @@ class StorageInformer(BaseInformer):
                 pass
 
             # Check written data matches read data
-            if self.storage.open(saved_filename).read() != data:
+            content.seek(0)
+            written_data = content.read()
+            read_data = self.storage.open(saved_filename).read()
+            if read_data != written_data:
                 raise InformerException(
-                    'Invalid data read after writing to your %s storage.' %
-                    self.storage_name)
+                    ('Invalid data read after writing to your %s storage. '
+                    '"%s" expected but received "%s".') % (
+                        self.storage_name, written_data, read_data))
 
             # And remove file.
             try:
